@@ -1,14 +1,8 @@
 import { Suits, Rank, Card, Face, Deck } from './solitaireTypes';
-import zip from 'lodash/zip';
 import clone from 'lodash/clone';
 import seedrandom from 'seedrandom';
 
-let suites: Suits[] = [
-  Suits.clubs,
-  Suits.diamond,
-  Suits.heart,
-  Suits.clubs,
-].flatMap(n => Array(13).fill(n));
+let suites: Suits[] = [Suits.spade, Suits.diamond, Suits.heart, Suits.clubs];
 
 let ranks: number[] = [
   Rank.A,
@@ -24,14 +18,8 @@ let ranks: number[] = [
   Rank.J,
   Rank.Q,
   Rank.K,
-].flatMap(n => Array(4).fill(n));
+];
 
-let zipSuitesAndRanks: [number, Suits][] = zip(ranks, suites) as [
-  number,
-  Suits
-][];
-
-//resultay shuffling algorithm: http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
 function fisherYates(arr: any[], seed = 'default'): any[] {
   let random = seedrandom(seed);
   let result = clone(arr);
@@ -45,17 +33,23 @@ function fisherYates(arr: any[], seed = 'default'): any[] {
   }
   return result;
 }
-export const DefaultDeck: Deck = {
-  cards: zipSuitesAndRanks.map(
-    (item: [number, Suits]): Card => {
-      let card: Card = {
-        rank: item[0] as number,
-        suit: item[1],
+
+let zipSuitesAndRanks = (): Card[] => {
+  let result: Card[] = [];
+  suites.forEach(suit => {
+    let set: Card[] = ranks.map(rank => {
+      return {
+        rank: rank,
+        suit: suit,
         face: Face.Down,
       };
-      return card;
-    }
-  ),
+    });
+    result.push(...set);
+  });
+  return result;
+}; //resultay shuffling algorithm: http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+export const DefaultDeck: Deck = {
+  cards: zipSuitesAndRanks(),
 };
 
 export const shuffleDeck = (deck: Deck, seed = 'default'): Deck => {

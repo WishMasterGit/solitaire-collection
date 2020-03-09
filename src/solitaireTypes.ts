@@ -3,8 +3,8 @@ export type Stock = {
 };
 
 export type Tableau = {
-  cards: Card[]
-}
+  cards: Card[];
+};
 
 export type Deck = {
   cards: Card[];
