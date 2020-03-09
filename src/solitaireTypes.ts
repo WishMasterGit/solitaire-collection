@@ -2,6 +2,10 @@ export type Stock = {
   decks: Deck[];
 };
 
+export type Waste = {
+  cards: Card[];
+};
+
 export type Tableau = {
   cards: Card[];
 };

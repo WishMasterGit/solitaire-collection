@@ -5,6 +5,7 @@ import {
   autoDeal,
   selectCard,
   moveCard,
+  gameEnded,
 } from '../../src/games/accordion';
 
 describe('accordion', () => {
@@ -31,5 +32,6 @@ describe('accordion', () => {
     expect(result[0].tableau.cards.length).toEqual(51);
     expect(result[1]).toEqual(true);
     expect(result[0].tableau.cards).not.toContainEqual(toCard[1]);
+    expect(gameEnded(result[0])).toEqual(false);
   });
 });

@@ -1,8 +1,9 @@
-import { Stock, Card, Face, Tableau } from '../solitaireTypes';
+import { Stock, Card, Face, Tableau, Waste } from '../solitaireTypes';
 import { shuffleDeck, DefaultDeck } from '../deck';
 export type Accordion = {
   stock: Stock;
   tableau: Tableau;
+  waste: Waste;
 };
 
 export let create = (seed = 'default'): Accordion => {
@@ -11,6 +12,9 @@ export let create = (seed = 'default'): Accordion => {
       decks: [shuffleDeck(DefaultDeck, seed)],
     },
     tableau: {
+      cards: [],
+    },
+    waste: {
       cards: [],
     },
   };
@@ -47,7 +51,12 @@ export let moveCard = (
   if (fromCard.suit === toCard.suit || fromCard.rank === toCard.rank) {
     game.tableau.cards.splice(toIndex, 1, fromCard);
     game.tableau.cards.splice(card[0], 1);
+    game.waste.cards.push(toCard);
     return [game, true];
   }
   return [game, false];
+};
+
+export let gameEnded = (game: Accordion): boolean => {
+  return game.waste.cards.length === 52;
 };
