@@ -1,7 +1,10 @@
 export type Stock = {
   decks: Deck[];
-  face: Face;
 };
+
+export type Tableau = {
+  cards: Card[]
+}
 
 export type Deck = {
   cards: Card[];
@@ -10,7 +13,7 @@ export type Deck = {
 export type Card = {
   rank: number;
   suit: Suits;
-  face: Face
+  face: Face;
 };
 
 export enum Suits {

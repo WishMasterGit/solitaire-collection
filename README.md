@@ -1,8 +1,12 @@
-# TSDX Bootstrap
+# Solitaire Collection
+
+reference: www.goodsol.com/pgshelp/ace_of_hearts.htm
+
+## TSDX Bootstrap
 
 This project was bootstrapped with [TSDX](https://github.com/jaredpalmer/tsdx).
 
-## Local Development
+### Local Development
 
 Below is a list of commands you will probably find useful.
 

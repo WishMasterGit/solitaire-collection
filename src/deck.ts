@@ -58,9 +58,9 @@ export const DefaultDeck: Deck = {
   ),
 };
 
-export const shuffleDeck = (deck: Deck, seed="default"): Deck => {
+export const shuffleDeck = (deck: Deck, seed = 'default'): Deck => {
   let cards = deck.cards;
   return {
-    cards: fisherYates(cards,seed),
+    cards: fisherYates(cards, seed),
   };
 };
