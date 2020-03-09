@@ -45,8 +45,8 @@ export let moveCard = (
   let fromCard = card[1];
   let toCard = game.tableau.cards[toIndex];
   if (fromCard.suit === toCard.suit || fromCard.rank === toCard.rank) {
-    game.tableau.cards.splice(toIndex, 1,fromCard);
-    game.tableau.cards.splice(card[0],1)
+    game.tableau.cards.splice(toIndex, 1, fromCard);
+    game.tableau.cards.splice(card[0], 1);
     return [game, true];
   }
   return [game, false];
