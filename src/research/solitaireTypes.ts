@@ -10,6 +10,7 @@ export type Deck = {
 export type Card = {
   rank: number;
   suit: Suits;
+  face: Face
 };
 
 export enum Suits {
