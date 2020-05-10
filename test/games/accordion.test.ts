@@ -6,6 +6,7 @@ import {
   selectCard,
   moveCard,
   gameEnded,
+  anyMovesLeft
 } from '../../src/games/accordion';
 
 describe('accordion', () => {
@@ -26,12 +27,30 @@ describe('accordion', () => {
   test('match', () => {
     let game: Accordion = create('seed');
     let dealt = autoDeal(game);
-    let card = selectCard(dealt, 50);
     let toCard = selectCard(dealt, 47);
-    let result = moveCard(dealt, card, 47);
+    let result = moveCard(dealt, 50, 47);
     expect(result[0].tableau.cards.length).toEqual(51);
     expect(result[1]).toEqual(true);
     expect(result[0].tableau.cards).not.toContainEqual(toCard[1]);
     expect(gameEnded(result[0])).toEqual(false);
+  });
+  test('any moves method works', () => {
+    const game: Accordion = create('seed');
+    const dealt = autoDeal(game);
+    const [anyMoves,from,to] = anyMovesLeft(dealt)
+    expect(anyMoves).toBeTruthy();
+    expect(from).toEqual(3);
+    expect(to).toEqual(0);
+  });
+  test('autoplay till game end', () => {
+    const game: Accordion = create('seed');
+    let dealt = autoDeal(game);
+    let canMove = true
+    while(canMove){
+      const [anyMoves,from,to] = anyMovesLeft(dealt)
+      canMove = anyMoves
+      dealt = moveCard(dealt,from,to)[0]
+    }
+    expect(gameEnded(dealt)).toBeTruthy()
   });
 });

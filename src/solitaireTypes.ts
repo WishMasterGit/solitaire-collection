@@ -21,10 +21,10 @@ export type Card = {
 };
 
 export enum Suits {
-  spade = 1,
-  heart = 2,
-  diamond = 3,
-  clubs = 4,
+  spade = "S",
+  heart = "H",
+  diamond = "D",
+  clubs = "C",
 }
 
 export enum Rank {

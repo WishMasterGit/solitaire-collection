@@ -1,9 +1,22 @@
-import { DefaultDeck, shuffleDeck } from '../src/deck';
+import { DefaultDeck, shuffleDeck, cardHash } from '../src/deck';
+import { Card, Suits, Face } from '../src/solitaireTypes';
 
 describe('default card deck', () => {
   it('should have', () => {
     let deck = DefaultDeck;
     expect(deck.cards.length).toEqual(52);
+  });
+});
+
+describe('card hash', () => {
+  it('should be', () => {
+    let card:Card = {
+      rank:1,
+      suit:Suits.clubs,
+      face:Face.Up
+    }
+    let hash = cardHash(card)
+    expect(hash).toEqual("c1C")
   });
 });
 

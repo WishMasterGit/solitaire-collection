@@ -58,3 +58,8 @@ export const shuffleDeck = (deck: Deck, seed = 'default'): Deck => {
     cards: fisherYates(cards, seed),
   };
 };
+
+export const cardHash = (card:Card):string =>{
+  if(card.face === Face.Down) return "c1B"
+  return `c${card.rank}${card.suit}`
+}

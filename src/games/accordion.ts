@@ -21,42 +21,60 @@ export let create = (seed = 'default'): Accordion => {
   return game;
 };
 
-export let stockClick = (game: Accordion): [Card, Accordion] => {
+export function stockClick(game: Accordion): [Card, Accordion] {
   let card: Card = game.stock.decks[0].cards.pop() as Card;
   card.face = Face.Up;
   game.tableau.cards.push(card);
   return [card, game];
 };
 
-export let autoDeal = (game: Accordion): Accordion => {
+export function autoDeal(game: Accordion): Accordion {
   while (game.stock.decks[0].cards.length > 0) {
     stockClick(game);
   }
   return game;
 };
 
-export let selectCard = (game: Accordion, index: number): [number, Card] => {
+export function selectCard(game: Accordion, index: number): [number, Card] {
   return [index, game.tableau.cards[index]];
 };
 
-export let moveCard = (
-  game: Accordion,
-  card: [number, Card],
-  toIndex: number
-): [Accordion, boolean] => {
-  let indexDiff = card[0] - toIndex;
-  if (indexDiff < 0 || indexDiff > 3 || indexDiff === 2) return [game, false];
-  let fromCard = card[1];
-  let toCard = game.tableau.cards[toIndex];
-  if (fromCard.suit === toCard.suit || fromCard.rank === toCard.rank) {
-    game.tableau.cards.splice(toIndex, 1, fromCard);
-    game.tableau.cards.splice(card[0], 1);
-    game.waste.cards.push(toCard);
-    return [game, true];
+export function canMoveCard(game: Accordion, from: number, to: number): [boolean, Card, Card] {
+  let indexDiff = from - to;
+  let fromCard = game.tableau.cards[from];
+  let toCard = game.tableau.cards[to];
+  if (indexDiff === 3) {
+    if (fromCard.suit === toCard.suit || fromCard.rank === toCard.rank) {
+      return [true, fromCard, toCard]
+    }
   }
-  return [game, false];
+  return [false, fromCard, toCard]
+}
+export function moveCard(
+  game: Accordion,
+  from: number,
+  to: number
+): [Accordion, boolean] {
+  const [canMove, fromCard, toCard] = canMoveCard(game, from, to)
+  if (!canMove) return [game, false]
+  game.tableau.cards.splice(to, 1, fromCard);
+  game.tableau.cards.splice(from, 1);
+  game.waste.cards.push(toCard);
+  return [game, true];
 };
 
-export let gameEnded = (game: Accordion): boolean => {
-  return game.waste.cards.length === 52;
+export function anyMovesLeft(game:Accordion):[boolean,number,number]{
+  let cards = game.tableau.cards
+  for(let i = 3; i < cards.length; i++){
+    const [canMove] = canMoveCard(game,i,i-3)
+    if(canMove){
+      return [true,i,i-3]
+    }
+  }
+  return [false,-1,-1]
+} 
+
+export function gameEnded(game: Accordion): boolean {
+  const [anyMoves] = anyMovesLeft(game)
+  return game.waste.cards.length === 52 || !anyMoves ;
 };
