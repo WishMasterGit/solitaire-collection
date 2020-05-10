@@ -59,7 +59,7 @@ export const shuffleDeck = (deck: Deck, seed = 'default'): Deck => {
   };
 };
 
-export const cardHash = (card:Card):string =>{
-  if(card.face === Face.Down) return "c1B"
-  return `c${card.rank}${card.suit}`
-}
+export const cardHash = (card: Card): string => {
+  if (card.face === Face.Down) return 'c1B';
+  return `c${card.rank}${card.suit}`;
+};
