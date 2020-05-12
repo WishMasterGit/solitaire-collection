@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "@types/seedrandom": "^2.4.28",
+    "immutable": "^4.0.0-rc.12",
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15",
     "seedrandom": "^3.0.5"

@@ -1,7 +1,6 @@
-import { Suits, Rank, Card, Face, Deck } from './solitaireTypes';
-import clone from 'lodash/clone';
+import { Suits, Rank, Card, Face, Deck, makeCard, makeDeck } from './solitaireTypes';
 import seedrandom from 'seedrandom';
-
+import {List} from 'immutable'
 let suites: Suits[] = [Suits.spade, Suits.diamond, Suits.heart, Suits.clubs];
 
 let ranks: number[] = [
@@ -20,43 +19,42 @@ let ranks: number[] = [
   Rank.K,
 ];
 
-function fisherYates(arr: any[], seed = 'default'): any[] {
+function fisherYates(arr: List<any>, seed = 'default'): List<any> {
   let random = seedrandom(seed);
-  let result = clone(arr);
-  let i = result.length;
+  let i = arr.size;
   while (--i) {
     let j = Math.floor(random() * (i + 1));
-    let tempi = result[i];
-    let tempj = result[j];
-    result[i] = tempj;
-    result[j] = tempi;
+    let tempi = arr.get(i);
+    let tempj = arr.get(j);
+    arr = arr.set(i,tempj) 
+    arr = arr.set(j,tempi) 
   }
-  return result;
+  return arr;
 }
 
-let zipSuitesAndRanks = (): Card[] => {
+let zipSuitesAndRanks = (): List<Card> => {
   let result: Card[] = [];
   suites.forEach(suit => {
     let set: Card[] = ranks.map(rank => {
-      return {
+      return makeCard({
         rank: rank,
         suit: suit,
         face: Face.Down,
-      };
+      });
     });
     result.push(...set);
   });
-  return result;
+  return List<Card>(result);
 }; //resultay shuffling algorithm: http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
-export const DefaultDeck: Deck = {
+export const DefaultDeck: Deck = makeDeck({
   cards: zipSuitesAndRanks(),
-};
+});
 
 export const shuffleDeck = (deck: Deck, seed = 'default'): Deck => {
   let cards = deck.cards;
-  return {
+  return makeDeck({
     cards: fisherYates(cards, seed),
-  };
+  });
 };
 
 export const cardHash = (card: Card): string => {

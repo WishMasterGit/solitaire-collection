@@ -22,17 +22,17 @@ describe('accordion', () => {
     expect(game.tableau.cards.length).toEqual(0);
     let result = autoDeal(game);
     expect(result.tableau.cards.length).toEqual(52);
-    expect(result.stock.decks[0].cards.length).toEqual(0);
+    expect(result.stock.decks[0].cards.size).toEqual(0);
   });
   test('match', () => {
     let game: Accordion = create('seed');
     let dealt = autoDeal(game);
     let toCard = selectCard(dealt, 47);
     let result = moveCard(dealt, 50, 47);
-    expect(result[0].tableau.cards.length).toEqual(51);
-    expect(result[1]).toEqual(true);
-    expect(result[0].tableau.cards).not.toContainEqual(toCard[1]);
-    expect(gameEnded(result[0])).toEqual(false);
+    expect(result[1].tableau.cards.length).toEqual(51);
+    expect(result[0]).toEqual(true);
+    expect(result[1].tableau.cards).not.toContainEqual(toCard[1]);
+    expect(gameEnded(result[1])).toEqual(false);
   });
   test('any moves method works', () => {
     const game: Accordion = create('seed');
@@ -49,7 +49,7 @@ describe('accordion', () => {
     while(canMove){
       const [anyMoves,from,to] = anyMovesLeft(dealt)
       canMove = anyMoves
-      dealt = moveCard(dealt,from,to)[0]
+      dealt = moveCard(dealt,from,to)[1]
     }
     expect(gameEnded(dealt)).toBeTruthy()
   });
