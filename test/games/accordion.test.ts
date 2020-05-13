@@ -22,7 +22,7 @@ describe('accordion', () => {
     expect(game.tableau.cards.length).toEqual(0);
     let result = autoDeal(game);
     expect(result.tableau.cards.length).toEqual(52);
-    expect(result.stock.decks[0].cards.size).toEqual(0);
+    expect(result.stock.decks[0].cards.length).toEqual(0);
   });
   test('match', () => {
     let game: Accordion = create('seed');

@@ -1,5 +1,3 @@
-import {Record, RecordOf, List} from 'immutable'
-
 export enum Rank {
   J = 11,
   Q = 12,
@@ -17,30 +15,42 @@ export enum Suits {
   diamond = 'D',
   clubs = 'C',
 }
-export type Stock = {
-  decks: Deck[];
-};
 
-export type Waste = {
-  cards: Card[];
-};
-
-export type Tableau = {
-  cards: Card[];
-};
-
-export type Foundation = {
-  cards: Card[];
+export enum LocationType {
+  Deck = 'deck',
+  Stock = 'stock',
+  Tableau = 'tableau',
+  Foundation = 'foundation'
 }
-
-export type Deck = RecordOf<{
-  cards: List<Card>;
+export type Stock = Readonly<{
+  decks: readonly Deck[];
 }>;
-export const makeDeck = Record({cards:List<Card>()})
-export type Card = RecordOf<{
+
+export type Waste = Readonly<{
+  cards: readonly Card[];
+}>;
+
+export type Tableau = Readonly<{
+  cards: readonly Card[];
+  index:number;
+}>;
+
+export type Foundation = Readonly<{
+  cards: readonly Card[];
+}>;
+
+export type Deck = Readonly<{
+  cards: readonly Card[];
+}>;
+export type Card = Readonly<{
   rank: number;
   suit: Suits;
   face: Face;
+  location:Location;
 }>;
 
-export const makeCard = Record({rank:0, suit:Suits.clubs, face:Face.Down})
+export type Location = Readonly<{
+  pileIndex:number;
+  index:number;
+  type: LocationType;
+}>
