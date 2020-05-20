@@ -20,23 +20,13 @@ export enum LocationType {
   Deck = 'deck',
   Stock = 'stock',
   Tableau = 'tableau',
-  Foundation = 'foundation'
+  Foundation = 'foundation',
+  Waste = 'waste',
 }
-export type Stock = Readonly<{
-  decks: readonly Deck[];
-}>;
 
-export type Waste = Readonly<{
-  cards: readonly Card[];
-}>;
-
-export type Tableau = Readonly<{
-  cards: readonly Card[];
-  index:number;
-}>;
-
-export type Foundation = Readonly<{
-  cards: readonly Card[];
+export type Pile = Readonly<{
+  cards: Readonly<Array<Card>>;
+  location: Location;
 }>;
 
 export type Deck = Readonly<{
@@ -46,11 +36,18 @@ export type Card = Readonly<{
   rank: number;
   suit: Suits;
   face: Face;
-  location:Location;
+  location: Location;
 }>;
 
 export type Location = Readonly<{
-  pileIndex:number;
-  index:number;
+  index: number;
   type: LocationType;
-}>
+}>;
+
+export type GameBoard = Record<LocationType, Pile[]>;
+
+export type Action = Readonly<{
+  value: Card | Location;
+}>;
+
+export type Actions = readonly Action[];

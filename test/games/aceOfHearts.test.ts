@@ -1,31 +1,60 @@
 import {
-  AceOfHearts,
   create,
   initialDeal,
-  dealFromStock
+  dealFromStock,
+  action
 } from '../../src/games/aceOfHearts';
+import { GameBoard, LocationType} from '../../src/solitaireTypes';
+import { newAction } from '../../src/action';
 describe('accordion', () => {
   test('initial deal', () => {
-    let game: AceOfHearts = create();
+    let game: GameBoard= create();
     game = initialDeal(game)
-    expect(game.tableau[0].cards.length).toEqual(1)
-    expect(game.tableau[1].cards.length).toEqual(2)
-    expect(game.tableau[2].cards.length).toEqual(3)
-    expect(game.tableau[3].cards.length).toEqual(4)
-    expect(game.tableau[4].cards.length).toEqual(5)
-    expect(game.tableau[5].cards.length).toEqual(6)
-    expect(game.tableau[6].cards.length).toEqual(7)
+    let tableau = game[LocationType.Tableau]
+    expect(tableau[0].cards.length).toEqual(1)
+    expect(tableau[1].cards.length).toEqual(2)
+    expect(tableau[2].cards.length).toEqual(3)
+    expect(tableau[3].cards.length).toEqual(4)
+    expect(tableau[4].cards.length).toEqual(5)
+    expect(tableau[5].cards.length).toEqual(6)
+    expect(tableau[6].cards.length).toEqual(7)
   });
   test('stock click', () => {
-    let game: AceOfHearts = create();
+    let game: GameBoard = create();
     game = initialDeal(game)
     game = dealFromStock(game)
-    expect(game.tableau[0].cards.length).toEqual(2)
-    expect(game.tableau[1].cards.length).toEqual(3)
-    expect(game.tableau[2].cards.length).toEqual(4)
-    expect(game.tableau[3].cards.length).toEqual(5)
-    expect(game.tableau[4].cards.length).toEqual(6)
-    expect(game.tableau[5].cards.length).toEqual(7)
-    expect(game.tableau[6].cards.length).toEqual(8)
+    let tableau = game[LocationType.Tableau]
+    expect(tableau[0].cards.length).toEqual(2)
+    expect(tableau[1].cards.length).toEqual(3)
+    expect(tableau[2].cards.length).toEqual(4)
+    expect(tableau[3].cards.length).toEqual(5)
+    expect(tableau[4].cards.length).toEqual(6)
+    expect(tableau[5].cards.length).toEqual(7)
+    expect(tableau[6].cards.length).toEqual(8)
+  });
+  test('stock click action', () => {
+    let game: GameBoard = create();
+    game = initialDeal(game)
+    let actions = newAction([],{value:{type:LocationType.Stock,index:0}})
+    game = action(game,actions)[0]
+    let tableau = game[LocationType.Tableau]
+    expect(tableau[0].cards.length).toEqual(2)
+    expect(tableau[1].cards.length).toEqual(3)
+    expect(tableau[2].cards.length).toEqual(4)
+    expect(tableau[3].cards.length).toEqual(5)
+    expect(tableau[4].cards.length).toEqual(6)
+    expect(tableau[5].cards.length).toEqual(7)
+    expect(tableau[6].cards.length).toEqual(8)
+  });
+  test('stock is empty', () => {
+    let game: GameBoard = create();
+    game = initialDeal(game)
+    let actions = newAction([],{value:{type:LocationType.Stock,index:0}})
+    for(let i =0; i <= 10; i++)
+    {
+      game = action(game,actions)[0]
+    }
+    expect(game.stock[0].cards.length).toEqual(0)
+
   });
 });

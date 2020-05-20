@@ -1,11 +1,4 @@
-import {
-  Suits,
-  Rank,
-  Card,
-  Face,
-  Deck,
-  LocationType,
-} from './solitaireTypes';
+import { Suits, Rank, Card, Face, Deck, LocationType } from './solitaireTypes';
 import seedrandom from 'seedrandom';
 import produce from 'immer';
 let suites: Suits[] = [Suits.spade, Suits.diamond, Suits.heart, Suits.clubs];
@@ -26,14 +19,18 @@ let ranks: number[] = [
   Rank.K,
 ];
 
-function fisherYates(arr:Card[], seed = 'default'): Card[] {
+function fisherYates(arr: Card[], seed = 'default'): Card[] {
   let random = seedrandom(seed);
   let i = arr.length;
   while (--i) {
     let j = Math.floor(random() * (i + 1));
-    let tempi = produce(arr[i],draft=>{draft.location.index = j});
-    let tempj = produce(arr[j],draft=>{draft.location.index = j});
-    arr[i] =  tempj;
+    let tempi = produce(arr[i], draft => {
+      draft.location.index = j;
+    });
+    let tempj = produce(arr[j], draft => {
+      draft.location.index = j;
+    });
+    arr[i] = tempj;
     arr[j] = tempi;
   }
   return arr;
@@ -48,11 +45,11 @@ let zipSuitesAndRanks = (): Card[] => {
         rank: rank,
         suit: suit,
         face: Face.Down,
-        location:{
-          pileIndex:indexCounter,
-          index:0,
-          type:LocationType.Deck
-        }
+        location: {
+          pileIndex: indexCounter,
+          index: 0,
+          type: LocationType.Deck,
+        },
       };
     });
     result.push(...set);
@@ -60,11 +57,13 @@ let zipSuitesAndRanks = (): Card[] => {
   return result;
 }; //resultay shuffling algorithm: http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
 export const DefaultDeck: Deck = {
-  cards:zipSuitesAndRanks()
+  cards: zipSuitesAndRanks(),
 };
 
 export const shuffleDeck = (deck: Deck, seed = 'default'): Deck => {
-  return produce(deck,draft=>{draft.cards = fisherYates(draft.cards, seed)})
+  return produce(deck, draft => {
+    draft.cards = fisherYates(draft.cards, seed);
+  });
 };
 
 export const cardHash = (card: Card): string => {

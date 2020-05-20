@@ -1,5 +1,5 @@
 import { DefaultDeck, shuffleDeck, cardHash } from '../src/deck';
-import { Card, Suits, Face} from '../src/solitaireTypes';
+import { Card, Suits, Face, LocationType} from '../src/solitaireTypes';
 
 describe('default card deck', () => {
   it('should have', () => {
@@ -13,7 +13,11 @@ describe('card hash', () => {
     let card:Card = {
       rank:1,
       suit:Suits.clubs,
-      face:Face.Up
+      face:Face.Up,
+      location:{
+        index:0,
+        type:LocationType.Deck
+      }
     }
     let hash = cardHash(card)
     expect(hash).toEqual("c1C")

@@ -1,88 +1,98 @@
-import { Stock, Card, Face, Tableau, Waste } from '../solitaireTypes';
+import {
+  Card,
+  Face,
+  LocationType,
+  GameBoard,
+  Actions,
+} from '../solitaireTypes';
 import { shuffleDeck, DefaultDeck } from '../deck';
-import produce, { Draft } from 'immer'
+import produce from 'immer';
 import _ from 'lodash';
-import { turnCard } from '../card';
-export type Accordion = Readonly<{
-  stock: Stock;
-  tableau: Tableau;
-  waste: Waste;
-  fromCardIndex: number;
-  toCardIndex: number;
-}>;
+import { turnCard, moveCard } from '../card';
+import { getPile, updatePile, findInPile } from '../gameBoard';
+import { GameAPI } from 'gameFactory';
 
-export let create = (seed = 'default'): Accordion => {
-  let game = {
-    stock: {
-      decks: [shuffleDeck(DefaultDeck, seed)],
-    },
-    tableau: {
-      cards: [],
-      index:0
-    },
-    waste: {
-      cards: [],
-    },
-    fromCardIndex: -1,
-    toCardIndex: -1,
-  };
+export let create = (seed = 'default'): GameBoard => {
+  let game: GameBoard = {
+    [LocationType.Stock]: [
+      {
+        cards: shuffleDeck(DefaultDeck, seed).cards,
+        location: {
+          type: LocationType.Stock,
+          index: 0,
+        },
+      },
+    ],
+    [LocationType.Tableau]: [
+      {
+        cards: [],
+        location: {
+          type: LocationType.Tableau,
+          index: 0,
+        },
+      }
+    ],
+    [LocationType.Waste]: [
+      {
+        cards: shuffleDeck(DefaultDeck, seed).cards,
+        location: {
+          type: LocationType.Waste,
+          index: 0,
+        },
+      },
+    ],
+    [LocationType.Foundation]: [],
+    [LocationType.Deck]: []
+  }
+
   return game;
 };
 
-let moveCardFromStockToTableau = produce((game: Draft<Accordion>, card: Card) => {
-  game.stock.decks[0].cards.pop();
-  game.tableau.cards.push(card);
-})
-
-let updateIndex = produce((game: Draft<Accordion>, from: number, to: number) => {
-  game.fromCardIndex = from;
-  game.toCardIndex = to;
-})
-export function stockClick(game: Accordion): [Card, Accordion] {
-  return _(game.stock.decks[0].cards)
-    .chain()
-    .last()
-    .thru((c) => turnCard(c, Face.Up))
-    .thru((c) => [c, moveCardFromStockToTableau(game, c)])
-    .value() as [Card, Accordion]
+export function stockClick(game: GameBoard): [Card, GameBoard] {
+  let stock = getPile(game, LocationType.Stock, 0);
+  let tableau = getPile(game, LocationType.Tableau, 0);
+  let card = _(stock.cards).last() as Card;
+  card = turnCard(card, Face.Up);
+  card = moveCard(card, { index: 0, type: LocationType.Tableau });
+  stock = produce(stock, draft => {
+    draft.cards.pop();
+  });
+  tableau = produce(tableau, draft => {
+    draft.cards.push(card);
+  });
+  game = updatePile(game, stock);
+  game = updatePile(game, tableau);
+  return [card, game];
 }
 
-export function cardClick(game: Accordion, index: number): Accordion {
-  const from = game.fromCardIndex === -1 ? index : game.fromCardIndex;
-  const to = game.fromCardIndex !== -1 ? index : game.toCardIndex;
-  return updateIndex(game, from, to)
-}
-
-export function cardClickAndMove(
-  game: Accordion,
-  index: number
-): [boolean, Accordion] {
-  let result = cardClick(game, index);
-  if (result.fromCardIndex !== -1 && result.toCardIndex !== -1) {
-    let [moveResult, game] = moveCard(result, result.fromCardIndex, result.toCardIndex);
-    return [moveResult, updateIndex(game, -1, -1)];
-  }
-  return [false, result];
-}
-export function autoDeal(game: Accordion): Accordion {
-  while (game.stock.decks[0].cards.length > 0) {
+export function autoDeal(game: GameBoard): GameBoard {
+  let stock = getPile(game, LocationType.Stock, 0);
+  while (stock.cards.length > 0) {
     game = stockClick(game)[1];
+    stock = getPile(game, LocationType.Stock, 0);
   }
   return game;
 }
 
-export function selectCard(game: Accordion, index: number): [number, Card] {
-  return [index, game.tableau.cards[index]];
+export function createAndDeal(seed: string): GameBoard {
+  const game = create(seed)
+  return autoDeal(game)
+}
+
+export function selectCard(game: GameBoard, index: number): [number, Card] {
+  const tableau = getPile(game, LocationType.Tableau, 0);
+  return [index, tableau.cards[index]];
 }
 
 export function canMoveCard(
-  game: Accordion,
+  game: GameBoard,
   from: number,
   to: number
 ): [boolean, Card, Card] {
   let indexDiff = from - to;
-  let fromCard = game.tableau.cards[from];
-  let toCard = game.tableau.cards[to];
+  let tableau = getPile(game, LocationType.Tableau, 0);
+  let fromCard = tableau.cards[from];
+  let toCard = tableau.cards[to];
   if (indexDiff === 3 || indexDiff === 1) {
     if (fromCard.suit === toCard.suit || fromCard.rank === toCard.rank) {
       return [true, fromCard, toCard];
@@ -90,24 +100,40 @@ export function canMoveCard(
   }
   return [false, fromCard, toCard];
 }
-export function moveCard(
-  game: Accordion,
+export function moveCardTo(
+  game: GameBoard,
   from: number,
   to: number
-): [boolean, Accordion] {
-  const [canMove, fromCard, toCard] = canMoveCard(game, from, to);
+): [boolean, GameBoard] {
+  let [canMove, fromCard, toCard] = canMoveCard(game, from, to);
   if (!canMove) return [true, game];
-  game = produce(game, draft => {
-    draft.tableau.cards.splice(to, 1, fromCard);
-    draft.tableau.cards.splice(from, 1);
-    draft.waste.cards.push(toCard);
-  })
+  fromCard = moveCard(fromCard, {
+    index: 0,
+    type: LocationType.Tableau,
+  });
+  toCard = moveCard(fromCard, {
+    index: 0,
+    type: LocationType.Tableau,
+  });
+  let tableau = getPile(game, LocationType.Tableau, 0);
+  tableau = produce(tableau, draft => {
+    draft.cards.splice(to, 1, fromCard);
+  });
+  tableau = produce(tableau, draft => {
+    draft.cards.splice(from, 1);
+  });
+  let waste = getPile(game, LocationType.Waste, 0);
+  waste = produce(waste, draft => {
+    draft.cards.push(toCard);
+  });
+  game = updatePile(game, tableau);
+  game = updatePile(game, waste);
   return [true, game];
 }
 
-export function anyMovesLeft(game: Accordion): [boolean, number, number] {
-  let cards = game.tableau.cards;
-  for (let i = 3; i < cards.length; i++) {
+export function anyMovesLeft(game: GameBoard): [boolean, number, number] {
+  let tableau = getPile(game, LocationType.Tableau, 0).cards;
+  for (let i = 3; i < tableau.length; i++) {
     const [canMove] = canMoveCard(game, i, i - 3);
     if (canMove) {
       return [true, i, i - 3];
@@ -116,7 +142,32 @@ export function anyMovesLeft(game: Accordion): [boolean, number, number] {
   return [false, -1, -1];
 }
 
-export function gameEnded(game: Accordion): boolean {
+export function gameEnded(game: GameBoard): boolean {
   const [anyMoves] = anyMovesLeft(game);
-  return game.waste.cards.length === 52 || !anyMoves;
+  const waste = getPile(game, LocationType.Waste, 0);
+  return waste.cards.length === 52 || !anyMoves;
 }
+
+export function action(
+  game: GameBoard,
+  actions: Actions
+): [GameBoard, Actions] {
+  if (actions.length === 1) {
+    return [game, actions];
+  }
+
+  if (actions.length === 2) {
+    const fromCard = actions[0].value as Card;
+    const toCard = actions[1].value as Card;
+    const from = findInPile(game, fromCard);
+    const to = findInPile(game, toCard);
+    let result = moveCardTo(game, from, to);
+    return [result[1], []];
+  }
+  return [game, actions];
+}
+
+export const api: GameAPI = {
+  create: createAndDeal,
+  action: action
+} 
