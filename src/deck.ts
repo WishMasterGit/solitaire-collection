@@ -65,4 +65,3 @@ export const shuffleDeck = (deck: Deck, seed = 'default'): Deck => {
     draft.cards = fisherYates(draft.cards, seed);
   });
 };
-
