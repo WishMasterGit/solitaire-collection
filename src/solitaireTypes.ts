@@ -46,8 +46,22 @@ export type Location = Readonly<{
 
 export type GameBoard = Record<LocationType, Pile[]>;
 
+export enum ActionType{
+  Card="Card",
+  Location="Location",
+  Noop = "Noop"
+}
 export type Action = Readonly<{
+  type:ActionType
   value: Card | Location;
 }>;
 
 export type Actions = readonly Action[];
+
+export type ActionFunction = (game: GameBoard, actions: Actions) => ActionResult
+
+export type ActionResult = {
+  game:GameBoard,
+  actions:Actions
+  log:[]
+}

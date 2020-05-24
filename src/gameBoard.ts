@@ -6,16 +6,17 @@ export function getPile(
   location: LocationType,
   index: number
 ): Pile {
-  return (gameBoard[location])[index];
+  return gameBoard[location][index];
 }
 
 export function updatePile(gameBoard: GameBoard, pile: Pile): GameBoard {
-
-  let piles = gameBoard[pile.location.type]
+  let piles = gameBoard[pile.location.type];
   piles = produce(piles, draft => {
     draft[pile.location.index] = { ...pile, cards: castDraft(pile.cards) };
   });
-  return produce(gameBoard,draft=>{draft[pile.location.type]=castDraft(piles)})
+  return produce(gameBoard, draft => {
+    draft[pile.location.type] = castDraft(piles);
+  });
 }
 export function findInPile(gameBoard: GameBoard, card: Card): number {
   let pile = getPile(gameBoard, card.location.type, card.location.index).cards;

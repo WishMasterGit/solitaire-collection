@@ -2,9 +2,9 @@ import {
   create,
   initialDeal,
   dealFromStock,
-  action
+  api 
 } from '../../src/games/aceOfHearts';
-import { GameBoard, LocationType} from '../../src/solitaireTypes';
+import { GameBoard, LocationType, ActionType} from '../../src/solitaireTypes';
 import { newAction } from '../../src/action';
 describe('accordion', () => {
   test('initial deal', () => {
@@ -35,8 +35,8 @@ describe('accordion', () => {
   test('stock click action', () => {
     let game: GameBoard = create();
     game = initialDeal(game)
-    let actions = newAction([],{value:{type:LocationType.Stock,index:0}})
-    game = action(game,actions)[0]
+    let actions = newAction([],{type:ActionType.Location, value:{type:LocationType.Stock,index:0}})
+    game = api.action(game,actions).game
     let tableau = game[LocationType.Tableau]
     expect(tableau[0].cards.length).toEqual(2)
     expect(tableau[1].cards.length).toEqual(3)
@@ -49,10 +49,10 @@ describe('accordion', () => {
   test('stock is empty', () => {
     let game: GameBoard = create();
     game = initialDeal(game)
-    let actions = newAction([],{value:{type:LocationType.Stock,index:0}})
+    let actions = newAction([],{type:ActionType.Location, value:{type:LocationType.Stock,index:0}})
     for(let i =0; i <= 10; i++)
     {
-      game = action(game,actions)[0]
+      game = api.action(game,actions).game
     }
     expect(game.stock[0].cards.length).toEqual(0)
 

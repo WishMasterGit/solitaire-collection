@@ -1,4 +1,5 @@
-import { DefaultDeck, shuffleDeck, cardHash } from '../src/deck';
+import { DefaultDeck, shuffleDeck } from '../src/deck';
+import {hashCard} from '../src/card'
 import { Card, Suits, Face, LocationType} from '../src/solitaireTypes';
 
 describe('default card deck', () => {
@@ -19,7 +20,7 @@ describe('card hash', () => {
         type:LocationType.Deck
       }
     }
-    let hash = cardHash(card)
+    let hash = hashCard(card)
     expect(hash).toEqual("c1C")
   });
 });

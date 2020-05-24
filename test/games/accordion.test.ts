@@ -6,9 +6,9 @@ import {
   moveCardTo,
   gameEnded,
   anyMovesLeft,
-  action
+  api
 } from '../../src/games/accordion';
-import {GameBoard, LocationType } from '../../src/solitaireTypes';
+import {GameBoard, LocationType, ActionType } from '../../src/solitaireTypes';
 import { getPile } from '../../src/gameBoard';
 import { newAction } from '../../src/action';
 
@@ -71,14 +71,14 @@ describe('accordion', () => {
     let dealt = autoDeal(game);
     let fromCard = selectCard(dealt, 50)[1];
     let toCard = selectCard(dealt, 47)[1];
-    let actions = newAction([],{value:fromCard})
-    let result = action(dealt,actions)
-    expect(result[1]).toEqual(actions)
-    actions = newAction(actions,{value:toCard})
-    let [newResult,newActions] = action(dealt,actions)
-    let tableau = getPile(newResult,LocationType.Tableau,0)
+    let actions = newAction([],{type:ActionType.Card, value:fromCard})
+    let result = api.action(dealt,actions)
+    expect(result.actions).toEqual(actions)
+    actions = newAction(actions,{type:ActionType.Card, value:toCard})
+    result = api.action(dealt,actions)
+    let tableau = getPile(result.game,LocationType.Tableau,0)
     expect(tableau.cards.length).toEqual(51);
     expect(tableau.cards).not.toContainEqual(toCard);
-    expect(newActions.length).toEqual(0)
+    expect(result.actions.length).toEqual(0)
   });
 });
