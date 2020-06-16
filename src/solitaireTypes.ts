@@ -67,4 +67,9 @@ export type ActionResult = {
   game: GameBoard;
   actions: Actions;
   log: [];
-};
+}
+
+export type Undo = Readonly<{
+  current: GameBoard
+  stack: readonly GameBoard[]
+}>

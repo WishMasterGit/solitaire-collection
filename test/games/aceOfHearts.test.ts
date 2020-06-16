@@ -4,7 +4,7 @@ import {
   dealFromStock,
   api 
 } from '../../src/games/aceOfHearts';
-import { GameBoard, LocationType, ActionType} from '../../src/solitaireTypes';
+import { GameBoard, LocationType, ActionType, Suits} from '../../src/solitaireTypes';
 import { newAction } from '../../src/action';
 describe('accordion', () => {
   test('initial deal', () => {
@@ -46,6 +46,20 @@ describe('accordion', () => {
     expect(tableau[5].cards.length).toEqual(7)
     expect(tableau[6].cards.length).toEqual(8)
   });
+  test('undo', () => {
+    let game: GameBoard = create();
+    game = initialDeal(game)
+    let actions = newAction([],{type:ActionType.Location, value:{type:LocationType.Stock,index:0}})
+    game = api.action(game,actions).game
+    let tableau = game[LocationType.Tableau]
+    expect(tableau[0].cards.length).toEqual(2)
+    expect(tableau[1].cards.length).toEqual(3)
+    expect(tableau[2].cards.length).toEqual(4)
+    expect(tableau[3].cards.length).toEqual(5)
+    expect(tableau[4].cards.length).toEqual(6)
+    expect(tableau[5].cards.length).toEqual(7)
+    expect(tableau[6].cards.length).toEqual(8)
+  });
   test('stock is empty', () => {
     let game: GameBoard = create();
     game = initialDeal(game)
@@ -56,5 +70,33 @@ describe('accordion', () => {
     }
     expect(game.stock[0].cards.length).toEqual(0)
 
+  });
+  test('initial deal', () => {
+    let game: GameBoard= create();
+    game = initialDeal(game)
+    let cardTo = {
+      rank: 9,
+      suit: Suits.spade,
+      face: 1,
+      location: {
+        type: LocationType.Tableau,
+        index: 3
+      }
+    }
+    let cardFrom = {
+      rank: 8,
+      suit: Suits.spade,
+      face: 1,
+      location: {
+        type: LocationType.Tableau,
+        index: 5
+      }
+    }
+
+    let actions = newAction([],{type:ActionType.Card, value:cardFrom})
+    actions = newAction(actions,{type:ActionType.Card, value:cardTo})
+    let result = api.action(game,actions)
+    expect(result.game[LocationType.Tableau][3].cards.length).toEqual(6)
+    expect(result.game[LocationType.Tableau][5].cards.length).toEqual(4)
   });
 });

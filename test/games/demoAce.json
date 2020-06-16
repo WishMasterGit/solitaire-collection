@@ -1,0 +1,507 @@
+{
+  "stock": [{
+    "cards": [{
+      "rank": 7,
+      "suit": "C",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 0,
+        "type": "deck"
+      }
+    }, {
+      "rank": 3,
+      "suit": "H",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 0,
+        "type": "deck"
+      }
+    }, {
+      "rank": 10,
+      "suit": "S",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 2,
+        "type": "deck"
+      }
+    }, {
+      "rank": 12,
+      "suit": "H",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 3,
+        "type": "deck"
+      }
+    }, {
+      "rank": 13,
+      "suit": "H",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 2,
+        "type": "deck"
+      }
+    }, {
+      "rank": 11,
+      "suit": "C",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 0,
+        "type": "deck"
+      }
+    }, {
+      "rank": 8,
+      "suit": "D",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 1,
+        "type": "deck"
+      }
+    }, {
+      "rank": 5,
+      "suit": "H",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 5,
+        "type": "deck"
+      }
+    }, {
+      "rank": 8,
+      "suit": "H",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 8,
+        "type": "deck"
+      }
+    }, {
+      "rank": 1,
+      "suit": "H",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 4,
+        "type": "deck"
+      }
+    }, {
+      "rank": 5,
+      "suit": "D",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 4,
+        "type": "deck"
+      }
+    }, {
+      "rank": 9,
+      "suit": "H",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 3,
+        "type": "deck"
+      }
+    }, {
+      "rank": 4,
+      "suit": "C",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 8,
+        "type": "deck"
+      }
+    }, {
+      "rank": 10,
+      "suit": "C",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 13,
+        "type": "deck"
+      }
+    }, {
+      "rank": 10,
+      "suit": "H",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 11,
+        "type": "deck"
+      }
+    }, {
+      "rank": 13,
+      "suit": "C",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 2,
+        "type": "deck"
+      }
+    }, {
+      "rank": 4,
+      "suit": "S",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 3,
+        "type": "deck"
+      }
+    }, {
+      "rank": 6,
+      "suit": "D",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 4,
+        "type": "deck"
+      }
+    }, {
+      "rank": 5,
+      "suit": "S",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 4,
+        "type": "deck"
+      }
+    }, {
+      "rank": 3,
+      "suit": "C",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 16,
+        "type": "deck"
+      }
+    }, {
+      "rank": 2,
+      "suit": "S",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 1,
+        "type": "deck"
+      }
+    }, {
+      "rank": 13,
+      "suit": "D",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 2,
+        "type": "deck"
+      }
+    }, {
+      "rank": 6,
+      "suit": "C",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 14,
+        "type": "deck"
+      }
+    }, {
+      "rank": 11,
+      "suit": "D",
+      "face": 0,
+      "location": {
+        "pileIndex": 0,
+        "index": 23,
+        "type": "deck"
+      }
+    }],
+    "location": {
+      "type": "stock",
+      "index": 0
+    }
+  }],
+  "tableau": [{
+    "cards": [{
+      "rank": 9,
+      "suit": "D",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 0
+      }
+    }],
+    "location": {
+      "type": "tableau",
+      "index": 0
+    }
+  }, {
+    "cards": [{
+      "rank": 11,
+      "suit": "S",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 1
+      }
+    }, {
+      "rank": 1,
+      "suit": "S",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 1
+      }
+    }],
+    "location": {
+      "type": "tableau",
+      "index": 1
+    }
+  }, {
+    "cards": [{
+      "rank": 2,
+      "suit": "C",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 2
+      }
+    }, {
+      "rank": 11,
+      "suit": "H",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 2
+      }
+    }, {
+      "rank": 5,
+      "suit": "C",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 2
+      }
+    }],
+    "location": {
+      "type": "tableau",
+      "index": 2
+    }
+  }, {
+    "cards": [{
+      "rank": 7,
+      "suit": "S",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 3
+      }
+    }, {
+      "rank": 6,
+      "suit": "H",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 3
+      }
+    }, {
+      "rank": 1,
+      "suit": "D",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 3
+      }
+    }, {
+      "rank": 9,
+      "suit": "S",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 3
+      }
+    }],
+    "location": {
+      "type": "tableau",
+      "index": 3
+    }
+  }, {
+    "cards": [{
+      "rank": 4,
+      "suit": "D",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 4
+      }
+    }, {
+      "rank": 8,
+      "suit": "C",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 4
+      }
+    }, {
+      "rank": 2,
+      "suit": "D",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 4
+      }
+    }, {
+      "rank": 3,
+      "suit": "D",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 4
+      }
+    }, {
+      "rank": 9,
+      "suit": "C",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 4
+      }
+    }],
+    "location": {
+      "type": "tableau",
+      "index": 4
+    }
+  }, {
+    "cards": [{
+      "rank": 10,
+      "suit": "D",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 5
+      }
+    }, {
+      "rank": 12,
+      "suit": "D",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 5
+      }
+    }, {
+      "rank": 7,
+      "suit": "D",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 5
+      }
+    }, {
+      "rank": 13,
+      "suit": "S",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 5
+      }
+    }, {
+      "rank": 8,
+      "suit": "S",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 5
+      }
+    }, {
+      "rank": 2,
+      "suit": "H",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 5
+      }
+    }],
+    "location": {
+      "type": "tableau",
+      "index": 5
+    }
+  }, {
+    "cards": [{
+      "rank": 6,
+      "suit": "S",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 6
+      }
+    }, {
+      "rank": 3,
+      "suit": "S",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 6
+      }
+    }, {
+      "rank": 7,
+      "suit": "H",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 6
+      }
+    }, {
+      "rank": 1,
+      "suit": "C",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 6
+      }
+    }, {
+      "rank": 12,
+      "suit": "C",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 6
+      }
+    }, {
+      "rank": 4,
+      "suit": "H",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 6
+      }
+    }, {
+      "rank": 12,
+      "suit": "S",
+      "face": 1,
+      "location": {
+        "type": "tableau",
+        "index": 6
+      }
+    }],
+    "location": {
+      "type": "tableau",
+      "index": 6
+    }
+  }],
+  "foundation": [{
+    "cards": [],
+    "location": {
+      "type": "foundation",
+      "index": 0
+    }
+  }],
+  "waste": [{
+    "cards": [],
+    "location": {
+      "type": "waste",
+      "index": 0
+    }
+  }],
+  "deck": []
+}

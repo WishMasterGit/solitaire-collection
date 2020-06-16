@@ -16,10 +16,10 @@ describe('accordion', () => {
   test('stock click', () => {
     let game: GameBoard = create();
 
-    let tableau = getPile(game,LocationType.Tableau,0)
+    let tableau = getPile(game,{ type:LocationType.Tableau,index:0 })
     expect(tableau.cards.length).toEqual(0);
     let result = stockClick(game);
-    tableau = getPile(result[1],LocationType.Tableau,0)
+    tableau = getPile(result[1],{ type:LocationType.Tableau,index:0 })
     expect(tableau.cards.length).toBeGreaterThan(0);
     expect(tableau.cards[0].location).toEqual({
       index:0,
@@ -28,11 +28,11 @@ describe('accordion', () => {
   });
   test('auto deal', () => {
     let game: GameBoard = create();
-    let tableau = getPile(game,LocationType.Tableau,0)
+    let tableau = getPile(game,{ type:LocationType.Tableau,index:0 })
     expect(tableau.cards.length).toEqual(0);
     let result = autoDeal(game);
-    tableau = getPile(result,LocationType.Tableau,0)
-    let stock = getPile(result,LocationType.Stock,0)
+    tableau = getPile(result,{ type:LocationType.Tableau,index:0 })
+    let stock = getPile(result, {type:LocationType.Stock, index:0})
     expect(tableau.cards.length).toEqual(52);
     expect(stock.cards.length).toEqual(0);
   });
@@ -41,7 +41,7 @@ describe('accordion', () => {
     let dealt = autoDeal(game);
     let toCard = selectCard(dealt, 47);
     let result = moveCardTo(dealt, 50, 47);
-    let tableau = getPile(result[1],LocationType.Tableau,0)
+    let tableau = getPile(result[1],{ type:LocationType.Tableau,index:0 })
     expect(tableau.cards.length).toEqual(51);
     expect(result[0]).toEqual(true);
     expect(tableau.cards).not.toContainEqual(toCard[1]);
@@ -76,7 +76,7 @@ describe('accordion', () => {
     expect(result.actions).toEqual(actions)
     actions = newAction(actions,{type:ActionType.Card, value:toCard})
     result = api.action(dealt,actions)
-    let tableau = getPile(result.game,LocationType.Tableau,0)
+    let tableau = getPile(result.game,{ type:LocationType.Tableau,index:0 })
     expect(tableau.cards.length).toEqual(51);
     expect(tableau.cards).not.toContainEqual(toCard);
     expect(result.actions.length).toEqual(0)

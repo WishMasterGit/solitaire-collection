@@ -6,6 +6,8 @@ import * as AceOfHearts from './games/aceOfHearts';
 import * as Actions from './action';
 import * as GameBoard from './gameBoard';
 import * as GameFactory from './gameFactory';
+import * as Hook from './hooks';
+import * as Undo from './undo';
 
 export { Deck };
 export { Card };
@@ -15,3 +17,5 @@ export { AceOfHearts };
 export { Actions };
 export { GameBoard };
 export { GameFactory };
+export { Hook };
+export { Undo };

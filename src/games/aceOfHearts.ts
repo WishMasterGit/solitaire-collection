@@ -8,20 +8,25 @@ import {
   Actions,
   ActionType,
   ActionFunction,
+  Suits,
+  Rank,
 } from '../solitaireTypes';
-import { actionsTypeHash, execute } from '../action';
+import { actionsTypeHash, execute, setDefault } from '../action';
 import { shuffleDeck, DefaultDeck } from '../deck';
 import produce, { Draft, castDraft } from 'immer';
 import _ from 'lodash';
-import { turnCard, moveCard } from '../card';
-import { getPile, updatePile, removeFromPile } from '../gameBoard';
+import { turnCard, moveCard, moveCards } from '../card';
+import { getPile, updatePile, findInPile } from '../gameBoard';
 import { GameAPI } from 'gameFactory';
 
 export let create = (seed = 'default'): GameBoard => {
   let game = {
     [LocationType.Stock]: [
       {
-        cards: shuffleDeck(DefaultDeck, seed).cards,
+        cards: moveCards(shuffleDeck(DefaultDeck, seed).cards, {
+          type: LocationType.Stock,
+          index: 0,
+        }),
         location: {
           type: LocationType.Stock,
           index: 0,
@@ -64,8 +69,12 @@ let cardToPile = produce((pile: Draft<Pile>, card: Card) => {
   pile.cards.push(card);
 });
 
+let cardsToPile = produce((pile: Draft<Pile>, cards: readonly Card[]) => {
+  pile.cards.push(...cards);
+});
+
 function getCardFromStock(game: GameBoard): [Card, GameBoard] {
-  let stock = getPile(game, LocationType.Stock, 0);
+  let stock = getPile(game, { type: LocationType.Stock, index: 0 });
   let card = _(stock.cards).last() as Card;
   card = turnCard(card, Face.Up);
   stock = produce(stock, draft => {
@@ -109,40 +118,83 @@ export function dealFromStock(game: GameBoard): GameBoard {
   });
 }
 
+export function splitPlie(game: GameBoard, from: Card): { sub: Pile, rest: Pile } {
+  const pile = getPile(game, from.location)
+  const index = findInPile(game, from)
+  const subPile = pile.cards.slice(index, pile.cards.length)
+  const restOfPile = pile.cards.slice(0, index)
+  return { sub: { cards: subPile, location: pile.location }, rest: { cards: restOfPile, location: pile.location } }
+}
+
 export function moveCardInTableau(
   game: GameBoard,
   from: Card,
   to: Card
 ): GameBoard {
-  let tableauTo = getPile(game, to.location.type, to.location.index);
+  if (to.location === from.location) { return game }
+  let tableauTo = getPile(game, to.location);
   let lastCard = _(tableauTo.cards).last() as Card;
-  if (lastCard.rank > from.rank) {
-    game = removeFromPile(game, from);
-    from = moveCard(from, {
+  if (lastCard.rank - from.rank === 1 && lastCard.suit === from.suit) {
+    let split = splitPlie(game, from)
+    game = updatePile(game, split.rest)
+    let cards = moveCards(split.sub.cards, {
       type: tableauTo.location.type,
       index: tableauTo.location.index,
     });
-    tableauTo = cardToPile(tableauTo, from);
+    tableauTo = cardsToPile(tableauTo, cards);
     game = updatePile(game, tableauTo);
   }
   return game;
 }
 
+export function moveToEmptyTableau(game: GameBoard, from: Card, toLocation: Location): GameBoard {
+  let tableau = getPile(game, toLocation);
+  if (tableau.cards.length === 0) {
+    if (from.rank === Rank.K) {
+      let split = splitPlie(game, from)
+      game = updatePile(game, split.rest)
+      let cards = moveCards(split.sub.cards, {
+        type: tableau.location.type,
+        index: tableau.location.index,
+      });
+      tableau = cardsToPile(tableau, cards);
+    }
+  }
+  return updatePile(game, tableau);
+}
+
 export function moveToFoundation(game: GameBoard, from: Card): GameBoard {
-  let foundation = getPile(game, LocationType.Foundation, 0);
-  let lastCard = _(foundation.cards).last() as Card;
-  if (lastCard.rank < from.rank) {
-    game = removeFromPile(game, from);
-    from = moveCard(from, {
-      type: foundation.location.type,
-      index: foundation.location.index,
-    });
-    foundation = cardToPile(foundation, from);
+  let foundation = getPile(game, { type: LocationType.Foundation, index: 0 });
+  if (foundation.cards.length === 0) {
+    if (from.suit === Suits.heart && from.rank === Rank.A) {
+      let split = splitPlie(game, from)
+      game = updatePile(game, split.rest)
+      from = moveCard(from, {
+        type: foundation.location.type,
+        index: foundation.location.index,
+      });
+      foundation = cardToPile(foundation, from);
+    }
+  }
+  else {
+    let lastCard = _(foundation.cards).last() as Card;
+    if (lastCard.rank - from.rank === 1 || (lastCard.rank === Rank.K && from.rank === Rank.A)) {
+      let split = splitPlie(game, from)
+      game = updatePile(game, split.rest)
+      from = moveCard(from, {
+        type: foundation.location.type,
+        index: foundation.location.index,
+      });
+      foundation = cardToPile(foundation, from);
+    }
   }
   return updatePile(game, foundation);
 }
 
 let actionSet = new Map<String, ActionFunction>();
+setDefault(actionSet, (game: GameBoard, _actions: Actions) => {
+  return { game, actions: [], log: [] };
+});
 
 actionSet.set(actionsTypeHash([]), (game: GameBoard, actions: Actions) => {
   return { game, actions, log: [] };
@@ -184,6 +236,25 @@ actionSet.set(
       toCard.location.type === LocationType.Foundation
     ) {
       game = moveToFoundation(game, fromCard);
+    }
+    return { game, actions: [], log: [] };
+  }
+);
+
+actionSet.set(
+  actionsTypeHash([ActionType.Card, ActionType.Location]),
+  (game: GameBoard, actions: Actions) => {
+    let fromCard = actions[0].value as Card;
+    let toLocation = actions[1].value as Location;
+    if (
+      fromCard.location.type === LocationType.Tableau &&
+      toLocation.type === LocationType.Foundation
+    ) {
+      game = moveToFoundation(game, fromCard);
+    }
+    if (fromCard.location.type === LocationType.Tableau &&
+      toLocation.type === LocationType.Tableau) {
+      game = moveToEmptyTableau(game, fromCard, toLocation)
     }
     return { game, actions: [], log: [] };
   }

@@ -1,12 +1,11 @@
-import { LocationType, GameBoard, Pile, Card } from 'solitaireTypes';
+import { Location, GameBoard, Pile, Card } from 'solitaireTypes';
 import produce, { castDraft } from 'immer';
 import _ from 'lodash';
 export function getPile(
   gameBoard: GameBoard,
-  location: LocationType,
-  index: number
+  location:Location
 ): Pile {
-  return gameBoard[location][index];
+  return gameBoard[location.type][location.index];
 }
 
 export function updatePile(gameBoard: GameBoard, pile: Pile): GameBoard {
@@ -19,12 +18,12 @@ export function updatePile(gameBoard: GameBoard, pile: Pile): GameBoard {
   });
 }
 export function findInPile(gameBoard: GameBoard, card: Card): number {
-  let pile = getPile(gameBoard, card.location.type, card.location.index).cards;
+  let pile = getPile(gameBoard, card.location).cards;
   return _.findIndex(pile, card);
 }
 
 export function removeFromPile(gameBoard: GameBoard, card: Card): GameBoard {
-  let pile = getPile(gameBoard, card.location.type, card.location.index);
+  let pile = getPile(gameBoard, card.location);
   pile = produce(pile, draft => {
     draft.cards.splice(card.location.index, 1);
   });
