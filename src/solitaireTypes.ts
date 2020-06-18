@@ -25,16 +25,16 @@ export enum LocationType {
 }
 
 export const Locations = {
-  Stock:{
-    type:LocationType.Stock,
-    index:0
+  Stock: {
+    type: LocationType.Stock,
+    index: 0,
   },
 
-  Foundation0:{
-    type:LocationType.Foundation,
-    index:0
-  }
-}
+  Foundation0: {
+    type: LocationType.Foundation,
+    index: 0,
+  },
+};
 
 export type Pile = Readonly<{
   cards: Readonly<Array<Card>>;

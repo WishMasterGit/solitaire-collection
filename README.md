@@ -33,3 +33,9 @@ By default, runs tests related to files changed since the last commit.
 ## Useful links
 
 [Solitaired](https://solitaired.com)
+
+## Tasks ToDo
+
+- Get available (first available) moves (through actions API)
+- prepare the testable deck for the ace of hearts
+- find a better card (so it easy to see suit and rank)

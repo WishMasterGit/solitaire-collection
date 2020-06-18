@@ -17,7 +17,15 @@ import { shuffleDeck, DefaultDeck } from '../deck';
 import produce, { castDraft } from 'immer';
 import _ from 'lodash';
 import { turnCard, moveCard, moveCards } from '../card';
-import { getPile, updatePile, cardToPile, cardsToPile, canGetCradFrom, getCardFrom, splitPile } from '../gameBoard';
+import {
+  getPile,
+  updatePile,
+  cardToPile,
+  cardsToPile,
+  canGetCradFrom,
+  getCardFrom,
+  splitPile,
+} from '../gameBoard';
 import { GameAPI } from 'gameFactory';
 
 export const createGame = (deck: Deck): GameBoard => {
@@ -64,9 +72,9 @@ export const createGame = (deck: Deck): GameBoard => {
     [LocationType.Deck]: [],
   };
   return game;
-}
+};
 export let create = (seed = 'default'): GameBoard => {
-  return createGame(shuffleDeck(DefaultDeck, seed))
+  return createGame(shuffleDeck(DefaultDeck, seed));
 };
 
 export function initialDeal(game: GameBoard): GameBoard {
@@ -74,7 +82,7 @@ export function initialDeal(game: GameBoard): GameBoard {
   tableaus = tableaus.map((tableau, i) => {
     for (let j = 1; j <= i + 1; j++) {
       if (!canGetCradFrom(game, Locations.Stock)) {
-        continue
+        continue;
       }
       let [card, newGame] = getCardFrom(game, Locations.Stock);
       card = turnCard(card, Face.Up);
@@ -108,7 +116,6 @@ export function dealFromStock(game: GameBoard): GameBoard {
     draft[LocationType.Tableau] = castDraft(tableaus);
   });
 }
-
 
 export function moveCardInTableau(
   game: GameBoard,

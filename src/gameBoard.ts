@@ -27,16 +27,20 @@ export function removeFromPile(gameBoard: GameBoard, card: Card): GameBoard {
   return updatePile(gameBoard, pile);
 }
 
-
 export const cardToPile = produce((pile: Draft<Pile>, card: Card) => {
   pile.cards.push(card);
 });
 
-export  const cardsToPile = produce((pile: Draft<Pile>, cards: readonly Card[]) => {
-  pile.cards.push(...cards);
-});
+export const cardsToPile = produce(
+  (pile: Draft<Pile>, cards: readonly Card[]) => {
+    pile.cards.push(...cards);
+  }
+);
 
-export function getCardFrom(game: GameBoard, location: Location): [Card, GameBoard] {
+export function getCardFrom(
+  game: GameBoard,
+  location: Location
+): [Card, GameBoard] {
   let pile = getPile(game, location);
   let card = _(pile.cards).last() as Card;
   pile = produce(pile, draft => {
@@ -46,7 +50,7 @@ export function getCardFrom(game: GameBoard, location: Location): [Card, GameBoa
 }
 export function canGetCradFrom(game: GameBoard, location: Location) {
   let pile = getPile(game, location);
-  return pile.cards.length > 0
+  return pile.cards.length > 0;
 }
 export function splitPile(
   game: GameBoard,

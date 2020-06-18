@@ -67,10 +67,10 @@ export const shuffleDeck = (deck: Deck, seed = 'default'): Deck => {
   });
 };
 
-export const deckFromString = (deckString:string):Deck =>{
-  let cardsString = deckString.split(';')
-  let result = cardsString.map(s=>cardFromString(s))
+export const deckFromString = (deckString: string): Deck => {
+  let cardsString = deckString.split(';');
+  let result = cardsString.map(s => cardFromString(s));
   return {
-    cards:result
-  }
-}
+    cards: result,
+  };
+};

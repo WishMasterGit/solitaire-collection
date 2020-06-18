@@ -22,17 +22,17 @@ export const cardToString = (card: Card): string => {
 };
 
 export const cardFromString = (card: string): Card => {
-  const numRe = /\d{1,2}/g
-  const stringsRe = /\D+/g
-  const [rank, face, index] = Array.from(card.matchAll(numRe)).flat()
-  const [suit, type] = Array.from(card.matchAll(stringsRe)).flat()
+  const numRe = /\d{1,2}/g;
+  const stringsRe = /\D+/g;
+  const [rank, face, index] = Array.from(card.matchAll(numRe)).flat();
+  const [suit, type] = Array.from(card.matchAll(stringsRe)).flat();
   return {
     rank: Number.parseInt(rank),
     suit: suit as Suits,
     face: Number.parseInt(face),
     location: {
       index: Number.parseInt(index),
-      type: type as LocationType
-    }
-  }
+      type: type as LocationType,
+    },
+  };
 };
