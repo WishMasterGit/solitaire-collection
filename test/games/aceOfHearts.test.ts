@@ -2,11 +2,14 @@ import {
   create,
   initialDeal,
   dealFromStock,
-  api 
+  api, 
+  createGame
 } from '../../src/games/aceOfHearts';
 import { GameBoard, LocationType, ActionType, Suits} from '../../src/solitaireTypes';
-import { newAction } from '../../src/action';
-describe('accordion', () => {
+import { newAction} from '../../src/action';
+import { deckFromString } from '../../src/deck';
+import { cardFromString } from '../../src/card';
+describe('aceOfHeartsTest', () => {
   test('initial deal', () => {
     let game: GameBoard= create();
     game = initialDeal(game)
@@ -92,11 +95,31 @@ describe('accordion', () => {
         index: 5
       }
     }
-
     let actions = newAction([],{type:ActionType.Card, value:cardFrom})
     actions = newAction(actions,{type:ActionType.Card, value:cardTo})
     let result = api.action(game,actions)
     expect(result.game[LocationType.Tableau][3].cards.length).toEqual(6)
     expect(result.game[LocationType.Tableau][5].cards.length).toEqual(4)
   });
+  test('moveToFoundation',()=>{
+    const deck = deckFromString('1H0deck0')
+    let game = createGame(deck)
+    game = initialDeal(game)
+    const fromCard = game.tableau[0].cards[0] 
+    let actions = newAction([],{type:ActionType.Card, value:fromCard})
+    actions = newAction(actions,{type:ActionType.Location, value:game.foundation[0].location})
+    let result = api.action(game,actions)
+    let expectedCard = cardFromString('1H1foundation0') 
+    expect(result.game.foundation[0].cards[0]).toEqual(expectedCard)
+  })
+  test('cantMoveToFoundation',()=>{
+    const deck = deckFromString('1C0deck0')
+    let game = createGame(deck)
+    game = initialDeal(game)
+    const fromCard = game.tableau[0].cards[0] 
+    let actions = newAction([],{type:ActionType.Card, value:fromCard})
+    actions = newAction(actions,{type:ActionType.Location, value:game.foundation[0].location})
+    let result = api.action(game,actions)
+    expect(result.game.foundation[0].cards.length).toEqual(0)
+  })
 });

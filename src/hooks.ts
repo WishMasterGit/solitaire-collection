@@ -1,1 +1,1 @@
-export default new Map<string,()=>void>()
+export default new Map<string, () => void>();

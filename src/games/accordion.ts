@@ -52,8 +52,8 @@ export let create = (seed = 'default'): GameBoard => {
 };
 
 export function stockClick(game: GameBoard): [Card, GameBoard] {
-  let stock = getPile(game, {type:LocationType.Stock, index:0});
-  let tableau = getPile(game, { type:LocationType.Tableau, index:0 });
+  let stock = getPile(game, { type: LocationType.Stock, index: 0 });
+  let tableau = getPile(game, { type: LocationType.Tableau, index: 0 });
   let card = _(stock.cards).last() as Card;
   card = turnCard(card, Face.Up);
   card = moveCard(card, { index: 0, type: LocationType.Tableau });
@@ -69,10 +69,10 @@ export function stockClick(game: GameBoard): [Card, GameBoard] {
 }
 
 export function autoDeal(game: GameBoard): GameBoard {
-  let stock = getPile(game, {type:LocationType.Stock, index:0});
+  let stock = getPile(game, { type: LocationType.Stock, index: 0 });
   while (stock.cards.length > 0) {
     game = stockClick(game)[1];
-    stock = getPile(game, {type:LocationType.Stock, index:0});
+    stock = getPile(game, { type: LocationType.Stock, index: 0 });
   }
   return game;
 }
@@ -83,7 +83,7 @@ export function createAndDeal(seed: string): GameBoard {
 }
 
 export function selectCard(game: GameBoard, index: number): [number, Card] {
-  const tableau = getPile(game, {type:LocationType.Tableau, index:0});
+  const tableau = getPile(game, { type: LocationType.Tableau, index: 0 });
   return [index, tableau.cards[index]];
 }
 
@@ -93,7 +93,7 @@ export function canMoveCard(
   to: number
 ): [boolean, Card, Card] {
   let indexDiff = from - to;
-  let tableau = getPile(game, { type:LocationType.Tableau, index:0 });
+  let tableau = getPile(game, { type: LocationType.Tableau, index: 0 });
   let fromCard = tableau.cards[from];
   let toCard = tableau.cards[to];
   if (indexDiff === 3 || indexDiff === 1) {
@@ -118,14 +118,14 @@ export function moveCardTo(
     index: 0,
     type: LocationType.Tableau,
   });
-  let tableau = getPile(game, { type:LocationType.Tableau, index:0 });
+  let tableau = getPile(game, { type: LocationType.Tableau, index: 0 });
   tableau = produce(tableau, draft => {
     draft.cards.splice(to, 1, fromCard);
   });
   tableau = produce(tableau, draft => {
     draft.cards.splice(from, 1);
   });
-  let waste = getPile(game, { type:LocationType.Waste, index:0 });
+  let waste = getPile(game, { type: LocationType.Waste, index: 0 });
   waste = produce(waste, draft => {
     draft.cards.push(toCard);
   });
@@ -135,7 +135,7 @@ export function moveCardTo(
 }
 
 export function anyMovesLeft(game: GameBoard): [boolean, number, number] {
-  let tableau = getPile(game, { type:LocationType.Tableau, index:0 }).cards;
+  let tableau = getPile(game, { type: LocationType.Tableau, index: 0 }).cards;
   for (let i = 3; i < tableau.length; i++) {
     const [canMove] = canMoveCard(game, i, i - 3);
     if (canMove) {
@@ -147,7 +147,7 @@ export function anyMovesLeft(game: GameBoard): [boolean, number, number] {
 
 export function gameEnded(game: GameBoard): boolean {
   const [anyMoves] = anyMovesLeft(game);
-  const waste = getPile(game, {type:LocationType.Waste, index:0});
+  const waste = getPile(game, { type: LocationType.Waste, index: 0 });
   return waste.cards.length === 52 || !anyMoves;
 }
 

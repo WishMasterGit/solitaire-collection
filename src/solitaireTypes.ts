@@ -24,6 +24,18 @@ export enum LocationType {
   Waste = 'waste',
 }
 
+export const Locations = {
+  Stock:{
+    type:LocationType.Stock,
+    index:0
+  },
+
+  Foundation0:{
+    type:LocationType.Foundation,
+    index:0
+  }
+}
+
 export type Pile = Readonly<{
   cards: Readonly<Array<Card>>;
   location: Location;
@@ -67,9 +79,9 @@ export type ActionResult = {
   game: GameBoard;
   actions: Actions;
   log: [];
-}
+};
 
 export type Undo = Readonly<{
-  current: GameBoard
-  stack: readonly GameBoard[]
-}>
+  current: GameBoard;
+  stack: readonly GameBoard[];
+}>;

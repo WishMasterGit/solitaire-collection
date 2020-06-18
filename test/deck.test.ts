@@ -1,15 +1,12 @@
-import { DefaultDeck, shuffleDeck } from '../src/deck';
-import {hashCard} from '../src/card'
+import { DefaultDeck, shuffleDeck, deckFromString } from '../src/deck';
+import {hashCard, cardToString} from '../src/card'
 import { Card, Suits, Face, LocationType} from '../src/solitaireTypes';
 
-describe('default card deck', () => {
+describe('deck functions test', () => {
   it('should have', () => {
     let deck = DefaultDeck;
     expect(deck.cards.length).toEqual(52);
   });
-});
-
-describe('card hash', () => {
   it('should be', () => {
     let card:Card = {
       rank:1,
@@ -23,9 +20,6 @@ describe('card hash', () => {
     let hash = hashCard(card)
     expect(hash).toEqual("c1C")
   });
-});
-
-describe('shuffle cards with seed', () => {
   it('should have', () => {
     let deck = DefaultDeck;
     let shuffle1 = shuffleDeck(deck);
@@ -34,4 +28,11 @@ describe('shuffle cards with seed', () => {
     expect(shuffle1).toEqual(shuffle2);
     expect(shuffle1).not.toEqual(shuffle3);
   });
+
+  test('deck from string', ()=>{
+    const deckString = '10C1deck0;11C1deck0;12H1deck0'
+    const deck = deckFromString(deckString)
+    expect(cardToString(deck.cards[0])).toEqual('10C1deck0')
+  })
+
 });

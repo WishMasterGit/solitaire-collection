@@ -1,6 +1,7 @@
 import { Suits, Rank, Card, Face, Deck, LocationType } from './solitaireTypes';
 import seedrandom from 'seedrandom';
 import produce from 'immer';
+import { cardFromString } from './card';
 let suites: Suits[] = [Suits.spade, Suits.diamond, Suits.heart, Suits.clubs];
 
 let ranks: number[] = [
@@ -65,3 +66,11 @@ export const shuffleDeck = (deck: Deck, seed = 'default'): Deck => {
     draft.cards = fisherYates(draft.cards, seed);
   });
 };
+
+export const deckFromString = (deckString:string):Deck =>{
+  let cardsString = deckString.split(';')
+  let result = cardsString.map(s=>cardFromString(s))
+  return {
+    cards:result
+  }
+}
