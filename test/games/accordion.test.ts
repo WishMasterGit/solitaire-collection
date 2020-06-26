@@ -4,11 +4,11 @@ import {
   autoDeal,
   selectCard,
   moveCardTo,
-  gameEnded,
+  getGameState,
   anyMovesLeft,
   api
 } from '../../src/games/accordion';
-import {GameBoard, LocationType, ActionType } from '../../src/solitaireTypes';
+import {GameBoard, LocationType, ActionType, GameState } from '../../src/solitaireTypes';
 import { getPile } from '../../src/gameBoard';
 import { newAction } from '../../src/action';
 
@@ -45,7 +45,7 @@ describe('accordion', () => {
     expect(tableau.cards.length).toEqual(51);
     expect(result[0]).toEqual(true);
     expect(tableau.cards).not.toContainEqual(toCard[1]);
-    expect(gameEnded(result[1])).toEqual(false);
+    expect(getGameState(result[1])).toEqual(GameState.InProgress);
   });
   test('any moves method works', () => {
     const game: GameBoard = create('seed');
@@ -64,7 +64,7 @@ describe('accordion', () => {
       canMove = anyMoves
       dealt = moveCardTo(dealt,from,to)[1]
     }
-    expect(gameEnded(dealt)).toBeTruthy()
+    expect(getGameState(dealt)).toBeTruthy()
   });
   test('actions', () => {
     const game: GameBoard = create('seed');

@@ -34,6 +34,14 @@ export const Locations = {
     type: LocationType.Foundation,
     index: 0,
   },
+  Tableau0: {
+    type: LocationType.Tableau,
+    index: 0,
+  },
+  Waste0: {
+    type: LocationType.Waste,
+    index: 0,
+  },
 };
 
 export type Pile = Readonly<{
@@ -85,3 +93,9 @@ export type Undo = Readonly<{
   current: GameBoard;
   stack: readonly GameBoard[];
 }>;
+
+export enum GameState {
+  InProgress = 'in progress',
+  NoMoreMoves = 'no more moves',
+  GameOver = 'game over'
+}

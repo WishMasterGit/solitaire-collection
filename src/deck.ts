@@ -1,7 +1,7 @@
-import { Suits, Rank, Card, Face, Deck, LocationType } from './solitaireTypes';
+import { Suits, Rank, Card, Face, Deck, LocationType, Pile } from './solitaireTypes';
 import seedrandom from 'seedrandom';
 import produce from 'immer';
-import { cardFromString } from './card';
+import { cardFromString, cardToString } from './card';
 let suites: Suits[] = [Suits.spade, Suits.diamond, Suits.heart, Suits.clubs];
 
 let ranks: number[] = [
@@ -74,3 +74,7 @@ export const deckFromString = (deckString: string): Deck => {
     cards: result,
   };
 };
+
+export const deckToString = (deck:Pile):string =>{
+  return deck.cards.map(c=>cardToString(c)).join(';')
+}
