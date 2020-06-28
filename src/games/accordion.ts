@@ -4,7 +4,6 @@ import {
   LocationType,
   GameBoard,
   Locations,
-  GameState,
   DeckGenerator,
   Deck,
   DeckGeneratorAction,
@@ -12,9 +11,9 @@ import {
 import produce from 'immer';
 import _ from 'lodash';
 import { turnCard, moveCard } from '../card';
-import { getPile, updatePile, } from '../gameBoard';
+import { getPile, updatePile } from '../gameBoard';
 
-export let create = (deck:Deck): GameBoard => {
+export let create = (deck: Deck): GameBoard => {
   let game: GameBoard = {
     [LocationType.Stock]: [
       {
@@ -76,10 +75,12 @@ export function autoDeal(game: GameBoard): GameBoard {
   return game;
 }
 
-export const createAndDeal = _.curry((deckGenerator:DeckGenerator, action:DeckGeneratorAction): GameBoard => {
-    const game = deckGenerator.get(action.type)?.(action.value)
+export const createAndDeal = _.curry(
+  (deckGenerator: DeckGenerator, action: DeckGeneratorAction): GameBoard => {
+    const game = deckGenerator.get(action.type)?.(action.value);
     return autoDeal(game as GameBoard);
-})
+  }
+);
 
 export function selectCard(game: GameBoard, index: number): [number, Card] {
   const tableau = getPile(game, Locations.Tableau0);
@@ -144,14 +145,3 @@ export function anyMovesLeft(game: GameBoard): [boolean, number, number] {
   return [false, -1, -1];
 }
 
-export function getGameState(game: GameBoard): GameState {
-  const [anyMoves] = anyMovesLeft(game);
-  const waste = getPile(game, { type: LocationType.Waste, index: 0 });
-  if (!anyMoves) {
-    return GameState.NoMoreMoves;
-  }
-  if (waste.cards.length === 52) {
-    return GameState.GameOver;
-  }
-  return GameState.InProgress;
-}

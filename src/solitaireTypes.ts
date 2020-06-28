@@ -38,6 +38,30 @@ export const Locations = {
     type: LocationType.Tableau,
     index: 0,
   },
+  Tableau1: {
+    type: LocationType.Tableau,
+    index: 1,
+  },
+  Tableau2: {
+    type: LocationType.Tableau,
+    index: 2,
+  },
+  Tableau3: {
+    type: LocationType.Tableau,
+    index: 3,
+  },
+  Tableau4: {
+    type: LocationType.Tableau,
+    index: 4,
+  },
+  Tableau5: {
+    type: LocationType.Tableau,
+    index: 5,
+  },
+  Tableau6: {
+    type: LocationType.Tableau,
+    index: 6,
+  },
   Waste0: {
     type: LocationType.Waste,
     index: 0,
@@ -102,12 +126,12 @@ export enum GameState {
 
 export enum DeckGenerators {
   Seed = 'seed',
-  PreBuilt = 'prebuilt'
+  PreBuilt = 'prebuilt',
 }
 
 export type DeckGeneratorAction = Readonly<{
-  type:DeckGenerators;
-  value:string
-}>
+  type: DeckGenerators;
+  value: string;
+}>;
 
-export type DeckGenerator = Map<String, (value:string)=>GameBoard>
+export type DeckGenerator = Map<String, (value: string) => GameBoard>;

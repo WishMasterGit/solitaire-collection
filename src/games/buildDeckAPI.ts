@@ -1,11 +1,22 @@
-import { ActionFunction, GameBoard, Actions, ActionType, Card, Face, Locations, DeckGenerator, DeckGenerators } from '../solitaireTypes';
+import {
+  ActionFunction,
+  GameBoard,
+  Actions,
+  ActionType,
+  Card,
+  Face,
+  Locations,
+  DeckGenerator,
+  DeckGenerators,
+  GameState,
+} from '../solitaireTypes';
 import { setDefault, actionsTypeHash, execute } from '../action';
 import { removeFromPile, getPile, updatePile } from '../gameBoard';
 import { turnCard, moveCard } from '../card';
 import produce from 'immer';
 import { GameAPI } from '../gameFactory';
 import { createAndDeal, create } from './buildDeck';
-import {  DefaultDeck, deckFromString } from 'deck';
+import { DefaultDeck, deckFromString } from '..//deck';
 
 let actionSet = new Map<String, ActionFunction>();
 
@@ -29,15 +40,24 @@ actionSet.set(
   }
 );
 
-let deckGenerator:DeckGenerator = new Map<String, (value:string)=>GameBoard>();
-deckGenerator.set(DeckGenerators.Seed,(_value)=>{
-    return create(DefaultDeck)
-})
-deckGenerator.set(DeckGenerators.PreBuilt,(value)=>{
-    return create(deckFromString(value))
-})
+let deckGenerator: DeckGenerator = new Map<
+  String,
+  (value: string) => GameBoard
+>();
+deckGenerator.set(DeckGenerators.Seed, _value => {
+  return create(DefaultDeck);
+});
+deckGenerator.set(DeckGenerators.PreBuilt, value => {
+  return create(deckFromString(value));
+});
+
+
+function getGameState(_game:GameBoard){
+  return GameState.InProgress
+}
 
 export const api: GameAPI = {
   create: createAndDeal(deckGenerator),
-  action: execute(actionSet)
+  action: execute(actionSet),
+  state: getGameState 
 };

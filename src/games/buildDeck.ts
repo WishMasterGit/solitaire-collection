@@ -8,12 +8,12 @@ import {
   DeckGeneratorAction,
   DeckGenerator,
 } from '../solitaireTypes';
-import { getPile, updatePile, } from '../gameBoard';
+import { getPile, updatePile } from '../gameBoard';
 import _ from 'lodash';
 import { turnCard, moveCard } from '../card';
 import produce from 'immer';
 
-export let create = (deck:Deck): GameBoard => {
+export let create = (deck: Deck): GameBoard => {
   let game: GameBoard = {
     [LocationType.Stock]: [
       {
@@ -74,7 +74,9 @@ export function autoDeal(game: GameBoard): GameBoard {
   return game;
 }
 
-export const createAndDeal = _.curry((deckGenerator:DeckGenerator, action:DeckGeneratorAction): GameBoard => {
-  const game = deckGenerator.get(action.type)?.(action.value)
-  return autoDeal(game as GameBoard);
-})
+export const createAndDeal = _.curry(
+  (deckGenerator: DeckGenerator, action: DeckGeneratorAction): GameBoard => {
+    const game = deckGenerator.get(action.type)?.(action.value);
+    return autoDeal(game as GameBoard);
+  }
+);

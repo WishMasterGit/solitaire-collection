@@ -1,7 +1,6 @@
 import {
   selectCard,
   moveCardTo,
-  getGameState,
   anyMovesLeft,
 } from '../../src/games/accordion';
 
@@ -28,7 +27,8 @@ describe('accordion', () => {
     expect(tableau.cards.length).toEqual(51);
     expect(result[0]).toEqual(true);
     expect(tableau.cards).not.toContainEqual(toCard[1]);
-    expect(getGameState(result[1])).toEqual(GameState.InProgress);
+    let state:GameState = api.state(result[1])
+    expect(state).toEqual(GameState.InProgress);
   });
   test('any moves method works', () => {
     const game: GameBoard = defaultGame('seed');
@@ -45,7 +45,7 @@ describe('accordion', () => {
       canMove = anyMoves
       game = moveCardTo(game, from, to)[1]
     }
-    expect(getGameState(game)).toBeTruthy()
+    expect(api.state(game)).toBeTruthy()
   });
   test('actions', () => {
     let game: GameBoard = defaultGame('seed');
