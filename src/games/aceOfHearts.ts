@@ -4,16 +4,13 @@ import {
   GameBoard,
   Location,
   LocationType,
-  Actions,
-  ActionType,
-  ActionFunction,
   Suits,
   Rank,
   Deck,
   Locations,
+  DeckGenerator,
+  DeckGeneratorAction,
 } from '../solitaireTypes';
-import { actionsTypeHash, execute, setDefault } from '../action';
-import { shuffleDeck, DefaultDeck } from '../deck';
 import produce, { castDraft } from 'immer';
 import _ from 'lodash';
 import { turnCard, moveCard, moveCards } from '../card';
@@ -26,7 +23,6 @@ import {
   getCardFrom,
   splitPile,
 } from '../gameBoard';
-import { GameAPI } from 'gameFactory';
 
 export const createGame = (deck: Deck): GameBoard => {
   let game = {
@@ -73,9 +69,6 @@ export const createGame = (deck: Deck): GameBoard => {
   };
   return game;
 };
-export let create = (seed = 'default'): GameBoard => {
-  return createGame(shuffleDeck(DefaultDeck, seed));
-};
 
 export function initialDeal(game: GameBoard): GameBoard {
   let tableaus = game[LocationType.Tableau];
@@ -98,10 +91,11 @@ export function initialDeal(game: GameBoard): GameBoard {
   });
 }
 
-export function createAndDeal(seed: string): GameBoard {
-  const game = create(seed);
-  return initialDeal(game);
-}
+export const createAndDeal = _.curry((deckGenerator: DeckGenerator, action: DeckGeneratorAction): GameBoard => {
+  const game = deckGenerator.get(action.type)?.(action.value)
+  return initialDeal(game as GameBoard);
+})
+
 export function dealFromStock(game: GameBoard): GameBoard {
   let tableaus = game[LocationType.Tableau];
   tableaus = tableaus.map(tableau => {
@@ -189,79 +183,3 @@ export function moveToFoundation(game: GameBoard, from: Card): GameBoard {
   }
   return updatePile(game, foundation);
 }
-
-let actionSet = new Map<String, ActionFunction>();
-setDefault(actionSet, (game: GameBoard, _actions: Actions) => {
-  return { game, actions: [], log: [] };
-});
-
-actionSet.set(actionsTypeHash([]), (game: GameBoard, actions: Actions) => {
-  return { game, actions, log: [] };
-});
-
-actionSet.set(
-  actionsTypeHash([ActionType.Card]),
-  (game: GameBoard, actions: Actions) => {
-    if ((actions[0].value as Card).location.type !== LocationType.Stock) {
-      return { game, actions, log: [] };
-    }
-    return { game: dealFromStock(game), actions: [], log: [] };
-  }
-);
-
-actionSet.set(
-  actionsTypeHash([ActionType.Location]),
-  (game: GameBoard, actions: Actions) => {
-    if ((actions[0].value as Location).type !== LocationType.Stock) {
-      return { game, actions, log: [] };
-    }
-    return { game: dealFromStock(game), actions: [], log: [] };
-  }
-);
-
-actionSet.set(
-  actionsTypeHash([ActionType.Card, ActionType.Card]),
-  (game: GameBoard, actions: Actions) => {
-    let fromCard = actions[0].value as Card;
-    let toCard = actions[1].value as Card;
-    if (
-      fromCard.location.type === LocationType.Tableau &&
-      toCard.location.type === LocationType.Tableau
-    ) {
-      game = moveCardInTableau(game, fromCard, toCard);
-    }
-    if (
-      fromCard.location.type === LocationType.Tableau &&
-      toCard.location.type === LocationType.Foundation
-    ) {
-      game = moveToFoundation(game, fromCard);
-    }
-    return { game, actions: [], log: [] };
-  }
-);
-
-actionSet.set(
-  actionsTypeHash([ActionType.Card, ActionType.Location]),
-  (game: GameBoard, actions: Actions) => {
-    let fromCard = actions[0].value as Card;
-    let toLocation = actions[1].value as Location;
-    if (
-      fromCard.location.type === LocationType.Tableau &&
-      toLocation.type === LocationType.Foundation
-    ) {
-      game = moveToFoundation(game, fromCard);
-    }
-    if (
-      fromCard.location.type === LocationType.Tableau &&
-      toLocation.type === LocationType.Tableau
-    ) {
-      game = moveToEmptyTableau(game, fromCard, toLocation);
-    }
-    return { game, actions: [], log: [] };
-  }
-);
-
-export const api: GameAPI = {
-  create: createAndDeal,
-  action: execute(actionSet),
-};

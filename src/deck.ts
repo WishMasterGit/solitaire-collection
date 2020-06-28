@@ -1,4 +1,12 @@
-import { Suits, Rank, Card, Face, Deck, LocationType, Pile } from './solitaireTypes';
+import {
+  Suits,
+  Rank,
+  Card,
+  Face,
+  Deck,
+  LocationType,
+  Pile,
+} from './solitaireTypes';
 import seedrandom from 'seedrandom';
 import produce from 'immer';
 import { cardFromString, cardToString } from './card';
@@ -75,6 +83,6 @@ export const deckFromString = (deckString: string): Deck => {
   };
 };
 
-export const deckToString = (deck:Pile):string =>{
-  return deck.cards.map(c=>cardToString(c)).join(';')
-}
+export const deckToString = (deck: Pile): string => {
+  return deck.cards.map(c => cardToString(c)).join(';');
+};

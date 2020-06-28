@@ -1,17 +1,23 @@
-import { GameBoard, LocationType, Locations, Card, Face, ActionFunction, Actions, ActionType } from '../solitaireTypes';
-import { DefaultDeck, shuffleDeck } from '../deck';
-import { GameAPI } from '../gameFactory';
-import { getPile, updatePile, removeFromPile } from '../gameBoard';
+import {
+  GameBoard,
+  LocationType,
+  Locations,
+  Card,
+  Face,
+  Deck,
+  DeckGeneratorAction,
+  DeckGenerator,
+} from '../solitaireTypes';
+import { getPile, updatePile, } from '../gameBoard';
 import _ from 'lodash';
 import { turnCard, moveCard } from '../card';
 import produce from 'immer';
-import { execute, setDefault, actionsTypeHash } from '../action';
 
-export let create = (seed = 'default'): GameBoard => {
+export let create = (deck:Deck): GameBoard => {
   let game: GameBoard = {
     [LocationType.Stock]: [
       {
-        cards: shuffleDeck(DefaultDeck, seed).cards,
+        cards: deck.cards,
         location: {
           type: LocationType.Stock,
           index: 0,
@@ -29,7 +35,7 @@ export let create = (seed = 'default'): GameBoard => {
     ],
     [LocationType.Waste]: [
       {
-        cards: shuffleDeck(DefaultDeck, seed).cards,
+        cards: [],
         location: {
           type: LocationType.Waste,
           index: 0,
@@ -67,34 +73,8 @@ export function autoDeal(game: GameBoard): GameBoard {
   }
   return game;
 }
-export function createAndDeal(seed: string): GameBoard {
-  const game = create(seed);
-  return autoDeal(game);
-}
 
-let actionSet = new Map<String, ActionFunction>();
-
-setDefault(actionSet, (game: GameBoard, actions: Actions) => {
-  return { game, actions, log: [] };
-});
-
-actionSet.set(
-  actionsTypeHash([ActionType.Card]),
-  (game: GameBoard, actions: Actions) => {
-    let card = actions[0].value as Card;
-    let result = removeFromPile(game,card)
-    card = turnCard(card, Face.Down);
-    card = moveCard(card, Locations.Stock);
-    let stock = getPile(result, Locations.Stock);
-    stock = produce(stock, draft => {
-      draft.cards.push(card);
-    });
-    result = updatePile(result, stock);
-    return { game: result, actions: [], log: [] };
-  }
-);
-
-export const api: GameAPI = {
-  create: createAndDeal,
-  action: execute(actionSet),
-};
+export const createAndDeal = _.curry((deckGenerator:DeckGenerator, action:DeckGeneratorAction): GameBoard => {
+  const game = deckGenerator.get(action.type)?.(action.value)
+  return autoDeal(game as GameBoard);
+})

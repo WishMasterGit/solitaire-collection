@@ -3,25 +3,22 @@ import {
   Face,
   LocationType,
   GameBoard,
-  Actions,
-  ActionFunction,
-  ActionType,
   Locations,
   GameState,
+  DeckGenerator,
+  Deck,
+  DeckGeneratorAction,
 } from '../solitaireTypes';
-import { shuffleDeck, DefaultDeck } from '../deck';
 import produce from 'immer';
 import _ from 'lodash';
 import { turnCard, moveCard } from '../card';
-import { getPile, updatePile, findInPile } from '../gameBoard';
-import { GameAPI } from 'gameFactory';
-import { actionsTypeHash, setDefault, execute } from '../action';
+import { getPile, updatePile, } from '../gameBoard';
 
-export let create = (seed = 'default'): GameBoard => {
+export let create = (deck:Deck): GameBoard => {
   let game: GameBoard = {
     [LocationType.Stock]: [
       {
-        cards: shuffleDeck(DefaultDeck, seed).cards,
+        cards: deck.cards,
         location: {
           type: LocationType.Stock,
           index: 0,
@@ -39,7 +36,7 @@ export let create = (seed = 'default'): GameBoard => {
     ],
     [LocationType.Waste]: [
       {
-        cards: shuffleDeck(DefaultDeck, seed).cards,
+        cards: [],
         location: {
           type: LocationType.Waste,
           index: 0,
@@ -79,10 +76,10 @@ export function autoDeal(game: GameBoard): GameBoard {
   return game;
 }
 
-export function createAndDeal(seed: string): GameBoard {
-  const game = create(seed);
-  return autoDeal(game);
-}
+export const createAndDeal = _.curry((deckGenerator:DeckGenerator, action:DeckGeneratorAction): GameBoard => {
+    const game = deckGenerator.get(action.type)?.(action.value)
+    return autoDeal(game as GameBoard);
+})
 
 export function selectCard(game: GameBoard, index: number): [number, Card] {
   const tableau = getPile(game, Locations.Tableau0);
@@ -150,36 +147,11 @@ export function anyMovesLeft(game: GameBoard): [boolean, number, number] {
 export function getGameState(game: GameBoard): GameState {
   const [anyMoves] = anyMovesLeft(game);
   const waste = getPile(game, { type: LocationType.Waste, index: 0 });
-  if(!anyMoves){
-    return GameState.NoMoreMoves
+  if (!anyMoves) {
+    return GameState.NoMoreMoves;
   }
-  if(
-    waste.cards.length === 52 
-  )
-  {
-    return GameState.GameOver
+  if (waste.cards.length === 52) {
+    return GameState.GameOver;
   }
-  return GameState.InProgress 
+  return GameState.InProgress;
 }
-
-let actionSet = new Map<String, ActionFunction>();
-setDefault(actionSet, (game: GameBoard, actions: Actions) => {
-  return { game, actions, log: [] };
-});
-
-actionSet.set(
-  actionsTypeHash([ActionType.Card, ActionType.Card]),
-  (game: GameBoard, actions: Actions) => {
-    const fromCard = actions[0].value as Card;
-    const toCard = actions[1].value as Card;
-    const from = findInPile(game, fromCard);
-    const to = findInPile(game, toCard);
-    let result = moveCardTo(game, from, to);
-    return { game: result[1], actions: [], log: [] };
-  }
-);
-
-export const api: GameAPI = {
-  create: createAndDeal,
-  action: execute(actionSet),
-};

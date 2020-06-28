@@ -97,5 +97,17 @@ export type Undo = Readonly<{
 export enum GameState {
   InProgress = 'in progress',
   NoMoreMoves = 'no more moves',
-  GameOver = 'game over'
+  GameOver = 'game over',
 }
+
+export enum DeckGenerators {
+  Seed = 'seed',
+  PreBuilt = 'prebuilt'
+}
+
+export type DeckGeneratorAction = Readonly<{
+  type:DeckGenerators;
+  value:string
+}>
+
+export type DeckGenerator = Map<String, (value:string)=>GameBoard>

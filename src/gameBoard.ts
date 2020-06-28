@@ -21,7 +21,7 @@ export function findInPile(gameBoard: GameBoard, card: Card): number {
 
 export function removeFromPile(gameBoard: GameBoard, card: Card): GameBoard {
   let pile = getPile(gameBoard, card.location);
-  let index = findInPile(gameBoard,card)
+  let index = findInPile(gameBoard, card);
   pile = produce(pile, draft => {
     draft.cards.splice(index, 1);
   });
