@@ -1,13 +1,4 @@
-import {
-  Card,
-  Face,
-  LocationType,
-  GameBoard,
-  Locations,
-  DeckGenerator,
-  Deck,
-  DeckGeneratorAction,
-} from '../solitaireTypes';
+import { Card, Face, LocationType, GameBoard, Locations, DeckGenerator, Deck, DeckGeneratorAction } from '../solitaireTypes';
 import produce from 'immer';
 import _ from 'lodash';
 import { turnCard, moveCard } from '../card';
@@ -87,11 +78,7 @@ export function selectCard(game: GameBoard, index: number): [number, Card] {
   return [index, tableau.cards[index]];
 }
 
-export function canMoveCard(
-  game: GameBoard,
-  from: number,
-  to: number
-): [boolean, Card, Card] {
+export function canMoveCard(game: GameBoard, from: number, to: number): [boolean, Card, Card] {
   let indexDiff = from - to;
   let tableau = getPile(game, Locations.Tableau0);
   let fromCard = tableau.cards[from];
@@ -103,11 +90,7 @@ export function canMoveCard(
   }
   return [false, fromCard, toCard];
 }
-export function moveCardTo(
-  game: GameBoard,
-  from: number,
-  to: number
-): [boolean, GameBoard] {
+export function moveCardTo(game: GameBoard, from: number, to: number): [boolean, GameBoard] {
   let [canMove, fromCard, toCard] = canMoveCard(game, from, to);
   if (!canMove) return [true, game];
   fromCard = moveCard(fromCard, {

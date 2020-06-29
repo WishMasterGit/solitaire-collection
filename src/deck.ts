@@ -1,32 +1,10 @@
-import {
-  Suits,
-  Rank,
-  Card,
-  Face,
-  Deck,
-  LocationType,
-  Pile,
-} from './solitaireTypes';
+import { Suits, Rank, Card, Face, Deck, LocationType, Pile } from './solitaireTypes';
 import seedrandom from 'seedrandom';
 import produce from 'immer';
 import { cardFromString, cardToString } from './card';
 let suites: Suits[] = [Suits.spade, Suits.diamond, Suits.heart, Suits.clubs];
 
-let ranks: number[] = [
-  Rank.A,
-  2,
-  3,
-  4,
-  5,
-  6,
-  7,
-  8,
-  9,
-  10,
-  Rank.J,
-  Rank.Q,
-  Rank.K,
-];
+let ranks: number[] = [Rank.A, 2, 3, 4, 5, 6, 7, 8, 9, 10, Rank.J, Rank.Q, Rank.K];
 
 function fisherYates(arr: Card[], seed = 'default'): Card[] {
   let random = seedrandom(seed);

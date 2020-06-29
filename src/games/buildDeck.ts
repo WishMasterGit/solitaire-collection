@@ -1,13 +1,4 @@
-import {
-  GameBoard,
-  LocationType,
-  Locations,
-  Card,
-  Face,
-  Deck,
-  DeckGeneratorAction,
-  DeckGenerator,
-} from '../solitaireTypes';
+import { GameBoard, LocationType, Locations, Card, Face, Deck, DeckGeneratorAction, DeckGenerator } from '../solitaireTypes';
 import { getPile, updatePile } from '../gameBoard';
 import _ from 'lodash';
 import { turnCard, moveCard } from '../card';

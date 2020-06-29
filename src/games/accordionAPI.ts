@@ -1,24 +1,11 @@
-import {
-  DeckGenerator,
-  GameBoard,
-  DeckGenerators,
-  ActionFunction,
-  Actions,
-  ActionType,
-  Card,
-  GameState,
-  Locations,
-} from '../solitaireTypes';
+import { DeckGenerator, GameBoard, DeckGenerators, ActionFunction, Actions, ActionType, Card, GameState, Locations } from '../solitaireTypes';
 import { create, moveCardTo, createAndDeal, anyMovesLeft } from './accordion';
 import { shuffleDeck, DefaultDeck, deckFromString } from '../deck';
 import { setDefault, actionsTypeHash, execute } from '../action';
 import { findInPile, getPile } from '../gameBoard';
 import { GameAPI } from '../gameFactory';
 
-const deckGenerator: DeckGenerator = new Map<
-  String,
-  (value: string) => GameBoard
->();
+const deckGenerator: DeckGenerator = new Map<String, (value: string) => GameBoard>();
 deckGenerator.set(DeckGenerators.Seed, value => {
   return create(shuffleDeck(DefaultDeck, value));
 });
@@ -31,16 +18,13 @@ setDefault(actionSet, (game: GameBoard, actions: Actions) => {
   return { game, actions, log: [] };
 });
 
-actionSet.set(
-  actionsTypeHash([ActionType.Card, ActionType.Card]),
-  (game: GameBoard, actions: Actions) => {
-    const [fromCard, toCard] = actions.map(a => a.value) as [Card, Card];
-    const from = findInPile(game, fromCard);
-    const to = findInPile(game, toCard);
-    let [, result] = moveCardTo(game, from, to);
-    return { game: result, actions: [], log: [] };
-  }
-);
+actionSet.set(actionsTypeHash([ActionType.Card, ActionType.Card]), (game: GameBoard, actions: Actions) => {
+  const [fromCard, toCard] = actions.map(a => a.value) as [Card, Card];
+  const from = findInPile(game, fromCard);
+  const to = findInPile(game, toCard);
+  let [, result] = moveCardTo(game, from, to);
+  return { game: result, actions: [], log: [] };
+});
 
 export function getGameState(game: GameBoard): GameState {
   const [anyMoves] = anyMovesLeft(game);

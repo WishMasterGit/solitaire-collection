@@ -1,10 +1,4 @@
-import {
-  GameBoard,
-  Actions,
-  ActionResult,
-  DeckGeneratorAction,
-  GameState,
-} from 'solitaireTypes';
+import { GameBoard, Actions, ActionResult, DeckGeneratorAction, GameState } from 'solitaireTypes';
 import { api as accordion } from './games/accordionAPI';
 import { api as aceOfHearts } from './games/aceOfHeartsAPI';
 import { api as buildDeck } from './games/buildDeckAPI';

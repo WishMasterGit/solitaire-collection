@@ -1,11 +1,4 @@
-import {
-  Actions,
-  Action,
-  ActionType,
-  ActionFunction,
-  ActionResult,
-  GameBoard,
-} from 'solitaireTypes';
+import { Actions, Action, ActionType, ActionFunction, ActionResult, GameBoard } from 'solitaireTypes';
 import produce from 'immer';
 import _ from 'lodash';
 export function newAction(actions: Actions, action: Action): Actions {
@@ -26,20 +19,13 @@ export function createSet(): Map<String, ActionFunction> {
   return new Map<String, ActionFunction>();
 }
 
-export function setDefault(
-  set: Map<String, ActionFunction>,
-  func: ActionFunction
-): Map<String, ActionFunction> {
+export function setDefault(set: Map<String, ActionFunction>, func: ActionFunction): Map<String, ActionFunction> {
   set.set('default', func);
   return set;
 }
 
 export const execute = _.curry(
-  (
-    set: Map<String, ActionFunction>,
-    game: GameBoard,
-    actions: Actions
-  ): ActionResult => {
+  (set: Map<String, ActionFunction>, game: GameBoard, actions: Actions): ActionResult => {
     let action = set.get(actionsHash(actions));
     console.log(`action: ${JSON.stringify(actions)}`);
     if (action) {

@@ -1,25 +1,8 @@
-import {
-  Card,
-  GameBoard,
-  Location,
-  LocationType,
-  Suits,
-  Rank,
-  Deck,
-  Locations,
-  DeckGenerator,
-  DeckGeneratorAction,
-} from '../solitaireTypes';
+import { Card, GameBoard, Location, LocationType, Suits, Rank, Deck, Locations, DeckGenerator, DeckGeneratorAction } from '../solitaireTypes';
 import produce from 'immer';
 import _ from 'lodash';
 import { moveCards } from '../card';
-import {
-  getPile,
-  updatePile,
-  moveLastCard,
-  canGetCradFrom,
-  moveSubPile,
-} from '../gameBoard';
+import { getPile, updatePile, moveLastCard, canGetCradFrom, moveSubPile } from '../gameBoard';
 
 export const createGame = (deck: Deck): GameBoard => {
   let game = {
@@ -61,9 +44,7 @@ export function initialDeal(game: GameBoard): GameBoard {
   for (let tableau of tableaus) {
     for (let j = 1; j <= tableau.location.index + 1; j++) {
       if (canGetCradFrom(newGame, Locations.Stock)) {
-        newGame = produce(newGame, _draft =>
-          moveLastCard(newGame, Locations.Stock, tableau.location)
-        );
+        newGame = produce(newGame, _draft => moveLastCard(newGame, Locations.Stock, tableau.location));
       }
     }
   }
@@ -82,9 +63,7 @@ export function dealFromStock(game: GameBoard): GameBoard {
   let newGame = game;
   for (let tableau of tableaus) {
     if (canGetCradFrom(newGame, Locations.Stock)) {
-      newGame = produce(newGame, _draft =>
-        moveLastCard(newGame, Locations.Stock, tableau.location)
-      );
+      newGame = produce(newGame, _draft => moveLastCard(newGame, Locations.Stock, tableau.location));
     }
   }
   return newGame;
@@ -93,11 +72,7 @@ export function dealFromStock(game: GameBoard): GameBoard {
 function canMoveInTableau(from: Card, lastInPile: Card) {
   return lastInPile.rank - from.rank === 1 && lastInPile.suit === from.suit;
 }
-export function moveCardInTableau(
-  game: GameBoard,
-  from: Card,
-  to: Card
-): GameBoard {
+export function moveCardInTableau(game: GameBoard, from: Card, to: Card): GameBoard {
   if (to.location === from.location) {
     return game;
   }
@@ -109,11 +84,7 @@ export function moveCardInTableau(
   return game;
 }
 
-export function moveToEmptyTableau(
-  game: GameBoard,
-  from: Card,
-  toLocation: Location
-): GameBoard {
+export function moveToEmptyTableau(game: GameBoard, from: Card, toLocation: Location): GameBoard {
   let tableau = getPile(game, toLocation);
   if (tableau.cards.length === 0) {
     if (from.rank === Rank.K) {
@@ -131,19 +102,14 @@ export function moveToFoundation(game: GameBoard, from: Card): GameBoard {
     }
   } else {
     let lastCard = _(foundation.cards).last() as Card;
-    if (
-      lastCard.rank - from.rank === 1 ||
-      (lastCard.rank === Rank.K && from.rank === Rank.A)
-    ) {
+    if (lastCard.rank - from.rank === 1 || (lastCard.rank === Rank.K && from.rank === Rank.A)) {
       return moveSubPile(game, from, foundation);
     }
   }
   return updatePile(game, foundation);
 }
 
-export function anyMovesLeft(
-  game: GameBoard
-): [boolean, Card | undefined, Card | undefined] {
+export function anyMovesLeft(game: GameBoard): [boolean, Card | undefined, Card | undefined] {
   const lastCards = game.tableau
     .map(t => _.last(t.cards))
     .reduce((a, c) => { if (c) { a.push(c); } return a; }, new Array<Card>());
@@ -152,10 +118,7 @@ export function anyMovesLeft(
 
   for (let lastCard of lastCards) {
     for (let card of allCards) {
-      if (
-        card.location !== lastCard.location &&
-        canMoveInTableau(card, lastCard)
-      ) {
+      if (card.location !== lastCard.location && canMoveInTableau(card, lastCard)) {
         return [true, card, lastCard];
       }
     }

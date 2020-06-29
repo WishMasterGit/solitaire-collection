@@ -33,16 +33,11 @@ export const cardToPile = produce((pile: Draft<Pile>, card: Card) => {
   pile.cards.push(card);
 });
 
-export const cardsToPile = produce(
-  (pile: Draft<Pile>, cards: readonly Card[]) => {
-    pile.cards.push(...cards);
-  }
-);
+export const cardsToPile = produce((pile: Draft<Pile>, cards: readonly Card[]) => {
+  pile.cards.push(...cards);
+});
 
-export function getCardFrom(
-  game: GameBoard,
-  location: Location
-): [Card, GameBoard] {
+export function getCardFrom(game: GameBoard, location: Location): [Card, GameBoard] {
   let pile = getPile(game, location);
   let card = _(pile.cards).last() as Card;
   pile = produce(pile, draft => {
@@ -51,12 +46,7 @@ export function getCardFrom(
   return [card, updatePile(game, pile)];
 }
 
-export function moveLastCard(
-  game: GameBoard,
-  from: Location,
-  to: Location,
-  cardFace: Face = Face.Up
-) {
+export function moveLastCard(game: GameBoard, from: Location, to: Location, cardFace: Face = Face.Up) {
   let [card, newGame] = getCardFrom(game, from);
   card = turnCard(card, cardFace);
   card = moveCard(card, to);
@@ -77,10 +67,7 @@ export function canGetCradFrom(game: GameBoard, location: Location) {
   let pile = getPile(game, location);
   return pile.cards.length > 0;
 }
-export function splitPile(
-  game: GameBoard,
-  from: Card
-): { sub: Pile; rest: Pile } {
+export function splitPile(game: GameBoard, from: Card): { sub: Pile; rest: Pile } {
   const pile = getPile(game, from.location);
   const index = findInPile(game, from);
   const subPile = pile.cards.slice(index, pile.cards.length);

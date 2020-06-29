@@ -102,10 +102,7 @@ export type Action = Readonly<{
 
 export type Actions = readonly Action[];
 
-export type ActionFunction = (
-  game: GameBoard,
-  actions: Actions
-) => ActionResult;
+export type ActionFunction = (game: GameBoard, actions: Actions) => ActionResult;
 
 export type ActionResult = {
   game: GameBoard;
