@@ -34,7 +34,7 @@ setDefault(actionSet, (game: GameBoard, actions: Actions) => {
 actionSet.set(
   actionsTypeHash([ActionType.Card, ActionType.Card]),
   (game: GameBoard, actions: Actions) => {
-    const [fromCard, toCard] = actions.map(a=>a.value) as [Card,Card]
+    const [fromCard, toCard] = actions.map(a => a.value) as [Card, Card];
     const from = findInPile(game, fromCard);
     const to = findInPile(game, toCard);
     let [, result] = moveCardTo(game, from, to);
@@ -57,5 +57,5 @@ export function getGameState(game: GameBoard): GameState {
 export const api: GameAPI = {
   create: createAndDeal(deckGenerator),
   action: execute(actionSet),
-  state: getGameState
+  state: getGameState,
 };

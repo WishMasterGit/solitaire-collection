@@ -37,7 +37,7 @@ actionSet.set(actionsTypeHash([]), (game: GameBoard, actions: Actions) => {
 actionSet.set(
   actionsTypeHash([ActionType.Card]),
   (game: GameBoard, actions: Actions) => {
-    let [card] = actions.map(a=>a.value) as [Card]
+    let [card] = actions.map(a => a.value) as [Card];
     if (card.location.type !== LocationType.Stock) {
       return { game, actions, log: [] };
     }
@@ -48,7 +48,7 @@ actionSet.set(
 actionSet.set(
   actionsTypeHash([ActionType.Location]),
   (game: GameBoard, actions: Actions) => {
-    let [location] = actions.map(a=>a.value) as [Location]
+    let [location] = actions.map(a => a.value) as [Location];
     if (location.type !== LocationType.Stock) {
       return { game, actions, log: [] };
     }
@@ -59,8 +59,8 @@ actionSet.set(
 actionSet.set(
   actionsTypeHash([ActionType.Card, ActionType.Card]),
   (game: GameBoard, actions: Actions) => {
-    const [fromCard,toCard] = actions.map(a=>a.value) as [Card,Card]
-    const fromCardPile = getPile(game,fromCard.location) 
+    const [fromCard, toCard] = actions.map(a => a.value) as [Card, Card];
+    const fromCardPile = getPile(game, fromCard.location);
     if (
       fromCard.location.type === LocationType.Tableau &&
       toCard.location.type === LocationType.Tableau
@@ -81,8 +81,8 @@ actionSet.set(
 actionSet.set(
   actionsTypeHash([ActionType.Card, ActionType.Location]),
   (game: GameBoard, actions: Actions) => {
-    let [fromCard,toLocation] = actions.map(a=>a.value) as [Card,Location]
-    const fromCardPile = getPile(game,fromCard.location) 
+    let [fromCard, toLocation] = actions.map(a => a.value) as [Card, Location];
+    const fromCardPile = getPile(game, fromCard.location);
     if (
       fromCard.location.type === LocationType.Tableau &&
       toLocation.type === LocationType.Foundation &&
@@ -100,7 +100,10 @@ actionSet.set(
   }
 );
 
-let deckGenerator: DeckGenerator = new Map<String, (value: string) => GameBoard>();
+let deckGenerator: DeckGenerator = new Map<
+  String,
+  (value: string) => GameBoard
+>();
 deckGenerator.set(DeckGenerators.Seed, value => {
   return createGame(shuffleDeck(DefaultDeck, value));
 });
@@ -110,21 +113,20 @@ deckGenerator.set(DeckGenerators.PreBuilt, value => {
 });
 
 function getGameState(game: GameBoard) {
-  const [movesLeft] = anyMovesLeft(game)
-  const [foundation] = game.foundation
+  const [movesLeft] = anyMovesLeft(game);
+  const [foundation] = game.foundation;
   if (foundation.cards.length === 52) {
-    return GameState.GameOver
+    return GameState.GameOver;
   }
   if (movesLeft) {
-    return GameState.InProgress
-  }
-  else {
-    return GameState.NoMoreMoves
+    return GameState.InProgress;
+  } else {
+    return GameState.NoMoreMoves;
   }
 }
 
 export const api: GameAPI = {
   create: createAndDeal(deckGenerator),
   action: execute(actionSet),
-  state: getGameState
+  state: getGameState,
 };

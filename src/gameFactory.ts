@@ -20,7 +20,7 @@ export interface GameAPI {
   create: (generator: DeckGeneratorAction) => GameBoard;
   action: (game: GameBoard, actions: Actions) => ActionResult;
 
-  state: (game:GameBoard)=>GameState
+  state: (game: GameBoard) => GameState;
 }
 
 let gameAPI = new Map<Games, GameAPI>();

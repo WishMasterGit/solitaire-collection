@@ -144,4 +144,3 @@ export function anyMovesLeft(game: GameBoard): [boolean, number, number] {
   }
   return [false, -1, -1];
 }
-

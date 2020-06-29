@@ -51,13 +51,12 @@ deckGenerator.set(DeckGenerators.PreBuilt, value => {
   return create(deckFromString(value));
 });
 
-
-function getGameState(_game:GameBoard){
-  return GameState.InProgress
+function getGameState(_game: GameBoard) {
+  return GameState.InProgress;
 }
 
 export const api: GameAPI = {
   create: createAndDeal(deckGenerator),
   action: execute(actionSet),
-  state: getGameState 
+  state: getGameState,
 };

@@ -51,13 +51,18 @@ export function getCardFrom(
   return [card, updatePile(game, pile)];
 }
 
-export function moveLastCard(game: GameBoard, from: Location, to: Location, cardFace: Face = Face.Up) {
+export function moveLastCard(
+  game: GameBoard,
+  from: Location,
+  to: Location,
+  cardFace: Face = Face.Up
+) {
   let [card, newGame] = getCardFrom(game, from);
   card = turnCard(card, cardFace);
   card = moveCard(card, to);
-  let toPile = getPile(newGame, to)
+  let toPile = getPile(newGame, to);
   toPile = cardToPile(toPile, card);
-  return updatePile(newGame, toPile)
+  return updatePile(newGame, toPile);
 }
 
 export function moveSubPile(game: GameBoard, from: Card, to: Pile) {
@@ -65,7 +70,7 @@ export function moveSubPile(game: GameBoard, from: Card, to: Pile) {
   let newGame = updatePile(game, split.rest);
   let cards = moveCards(split.sub.cards, to.location);
   let newTo = cardsToPile(to, cards);
-  return updatePile(newGame, newTo)
+  return updatePile(newGame, newTo);
 }
 
 export function canGetCradFrom(game: GameBoard, location: Location) {
