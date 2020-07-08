@@ -1,6 +1,6 @@
 # Solitaire Collection
 
-reference: www.goodsol.com/pgshelp/ace_of_hearts.htm
+reference: [goodsol](www.goodsol.com/pgshelp/ace_of_hearts.htm)
 
 ## TSDX Bootstrap
 

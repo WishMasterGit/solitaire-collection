@@ -1,11 +1,11 @@
-import { DeckGenerator, GameBoard, DeckGenerators, ActionFunction, Actions, ActionType, Card, GameState, Locations } from '../solitaireTypes';
-import { create, moveCardTo, createAndDeal, anyMovesLeft } from './accordion';
+import { DeckGenerator, Game, DeckGenerators, ActionFunction, Actions, ActionType, Card, GameState, Locations, Games, } from '../solitaireTypes';
+import { create, moveCardTo, anyMovesLeft } from './accordion';
 import { shuffleDeck, DefaultDeck, deckFromString } from '../deck';
 import { setDefault, actionsTypeHash, execute } from '../action';
-import { findInPile, getPile } from '../gameBoard';
-import { GameAPI } from '../gameFactory';
+import { getPile, createAndDeal } from '../gameBoard';
+import { GameAPI} from '../gameFactory';
 
-const deckGenerator: DeckGenerator = new Map<String, (value: string) => GameBoard>();
+const deckGenerator: DeckGenerator = new Map<String, (value: string) => Game>();
 deckGenerator.set(DeckGenerators.Seed, value => {
   return create(shuffleDeck(DefaultDeck, value));
 });
@@ -14,21 +14,25 @@ deckGenerator.set(DeckGenerators.PreBuilt, value => {
 });
 
 let actionSet = new Map<String, ActionFunction>();
-setDefault(actionSet, (game: GameBoard, actions: Actions) => {
+setDefault(actionSet, (game: Game, actions: Actions) => {
   return { game, actions, log: [] };
 });
 
-actionSet.set(actionsTypeHash([ActionType.Card, ActionType.Card]), (game: GameBoard, actions: Actions) => {
-  const [fromCard, toCard] = actions.map(a => a.value) as [Card, Card];
-  const from = findInPile(game, fromCard);
-  const to = findInPile(game, toCard);
-  let [, result] = moveCardTo(game, from, to);
-  return { game: result, actions: [], log: [] };
-});
+actionSet.set(
+  actionsTypeHash([ActionType.Card, ActionType.Card]),
+  (game: Game, actions: Actions) => {
+    const [fromCard, toCard] = actions.map(a => a.value) as [Card, Card];
 
-export function getGameState(game: GameBoard): GameState {
+    if (game.rules[Locations.Tableau0.type](game.board,fromCard, toCard)) {
+      return {game:moveCardTo(game, fromCard, toCard), actions:[], log:[]};
+    }
+    return { game: game, actions: [], log: [] };
+  }
+);
+
+export function getGameState(game: Game): GameState {
   const [anyMoves] = anyMovesLeft(game);
-  const waste = getPile(game, Locations.Waste0);
+  const waste = getPile(game.board, Locations.Waste0);
   if (!anyMoves) {
     return GameState.NoMoreMoves;
   }
@@ -39,7 +43,7 @@ export function getGameState(game: GameBoard): GameState {
 }
 
 export const api: GameAPI = {
-  create: createAndDeal(deckGenerator),
+  create: createAndDeal(Games.Accordion)(deckGenerator),
   action: execute(actionSet),
   state: getGameState,
 };

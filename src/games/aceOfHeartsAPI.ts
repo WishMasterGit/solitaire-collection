@@ -1,61 +1,77 @@
 import { setDefault, actionsTypeHash, execute } from '../action';
-import { ActionFunction, GameBoard, Actions, ActionType, Card, LocationType, Location, DeckGenerator, DeckGenerators, GameState } from '../solitaireTypes';
-import { dealFromStock, moveCardInTableau, moveToFoundation, moveToEmptyTableau, createAndDeal, createGame, anyMovesLeft } from './aceOfHearts';
+import {
+  ActionFunction,
+  Game,
+  Actions,
+  ActionType,
+  Card,
+  LocationType,
+  Location,
+  DeckGenerator,
+  DeckGenerators,
+  GameState,
+  Games,
+  ActionResult,
+} from '../solitaireTypes';
+import {
+  createGame,
+  anyMovesLeft,
+} from './aceOfHearts';
 import { GameAPI } from '../gameFactory';
 import { shuffleDeck, DefaultDeck, deckFromString } from '../deck';
-import { getPile } from '../gameBoard';
+import { getPile, createAndDeal, moveSubPile, asCard } from '../gameBoard';
 import _ from 'lodash';
+import { deal } from '../stock';
 
-let actionSet = new Map<String, ActionFunction>();
-setDefault(actionSet, (game: GameBoard, _actions: Actions) => {
-  return { game, actions: [], log: [] };
-});
 
-actionSet.set(actionsTypeHash([]), (game: GameBoard, actions: Actions) => {
-  return { game, actions, log: [] };
-});
+function moveCards(game:Game, fromCard:Card, toLocation:Location){
+    const toPile = getPile(game.board,toLocation)
+    if (game.rules[toPile.location.type](game.board,fromCard, toPile)) {
+      game = moveSubPile(game, fromCard, toPile);
+    }
+    return game
+}
 
-actionSet.set(actionsTypeHash([ActionType.Card]), (game: GameBoard, actions: Actions) => {
+const singleClickAction = (game: Game, actions: Actions):ActionResult => {
   let [card] = actions.map(a => a.value) as [Card];
-  if (card.location.type !== LocationType.Stock) {
-    return { game, actions, log: [] };
-  }
-  return { game: dealFromStock(game), actions: [], log: [] };
-});
-
-actionSet.set(actionsTypeHash([ActionType.Location]), (game: GameBoard, actions: Actions) => {
   let [location] = actions.map(a => a.value) as [Location];
+
+  if(asCard(card)){ location = card.location }
   if (location.type !== LocationType.Stock) {
     return { game, actions, log: [] };
   }
-  return { game: dealFromStock(game), actions: [], log: [] };
-});
+  return { game: deal(game, Games.AceOfHearts), actions: [], log: [] };
+};
 
-actionSet.set(actionsTypeHash([ActionType.Card, ActionType.Card]), (game: GameBoard, actions: Actions) => {
-  const [fromCard, toCard] = actions.map(a => a.value) as [Card, Card];
-  const fromCardPile = getPile(game, fromCard.location);
-  if (fromCard.location.type === LocationType.Tableau && toCard.location.type === LocationType.Tableau) {
-    game = moveCardInTableau(game, fromCard, toCard);
-  }
-  if (fromCard.location.type === LocationType.Tableau && toCard.location.type === LocationType.Foundation && fromCard === _.last(fromCardPile.cards)) {
-    game = moveToFoundation(game, fromCard);
-  }
-  return { game, actions: [], log: [] };
-});
+let actionSet = new Map<String, ActionFunction>();
+setDefault(actionSet, (game, _actions) => { return { game, actions: [], log: [] }; });
 
-actionSet.set(actionsTypeHash([ActionType.Card, ActionType.Location]), (game: GameBoard, actions: Actions) => {
-  let [fromCard, toLocation] = actions.map(a => a.value) as [Card, Location];
-  const fromCardPile = getPile(game, fromCard.location);
-  if (fromCard.location.type === LocationType.Tableau && toLocation.type === LocationType.Foundation && fromCard === _.last(fromCardPile.cards)) {
-    game = moveToFoundation(game, fromCard);
-  }
-  if (fromCard.location.type === LocationType.Tableau && toLocation.type === LocationType.Tableau) {
-    game = moveToEmptyTableau(game, fromCard, toLocation);
-  }
-  return { game, actions: [], log: [] };
-});
+actionSet.set(actionsTypeHash([]), (game, actions) => { return { game, actions, log: [] }; });
 
-let deckGenerator: DeckGenerator = new Map<String, (value: string) => GameBoard>();
+actionSet.set(actionsTypeHash([ActionType.Card]), singleClickAction);
+
+actionSet.set(actionsTypeHash([ActionType.Location]),singleClickAction);
+
+actionSet.set(
+  actionsTypeHash([ActionType.Card, ActionType.Card]),
+  (game: Game, actions: Actions) => {
+    const [fromCard, toCard] = actions.map(a => a.value) as [Card, Card];
+    game = moveCards(game,fromCard,toCard.location)
+    return { game, actions: [], log: [] };
+  }
+);
+
+
+actionSet.set(
+  actionsTypeHash([ActionType.Card, ActionType.Location]),
+  (game: Game, actions: Actions) => {
+    let [fromCard, toLocation] = actions.map(a => a.value) as [Card, Location];
+    game = moveCards(game,fromCard,toLocation)
+    return { game, actions: [], log: [] };
+  }
+);
+
+let deckGenerator: DeckGenerator = new Map<String, (value: string) => Game>();
 deckGenerator.set(DeckGenerators.Seed, value => {
   return createGame(shuffleDeck(DefaultDeck, value));
 });
@@ -64,9 +80,9 @@ deckGenerator.set(DeckGenerators.PreBuilt, value => {
   return createGame(deckFromString(value));
 });
 
-function getGameState(game: GameBoard) {
+function getGameState(game: Game) {
   const [movesLeft] = anyMovesLeft(game);
-  const [foundation] = game.foundation;
+  const [foundation] = game.board.foundation;
   if (foundation.cards.length === 52) {
     return GameState.GameOver;
   }
@@ -78,7 +94,7 @@ function getGameState(game: GameBoard) {
 }
 
 export const api: GameAPI = {
-  create: createAndDeal(deckGenerator),
+  create: createAndDeal(Games.AceOfHearts)(deckGenerator),
   action: execute(actionSet),
   state: getGameState,
 };

@@ -16,6 +16,17 @@ export enum Suits {
   clubs = 'C',
 }
 
+export enum Color {
+  Red = 'Red',
+  Black = 'Black'
+}
+
+export const SuitColors = new Map<Suits,Color>()
+SuitColors.set(Suits.clubs,Color.Black)
+SuitColors.set(Suits.spade,Color.Black)
+SuitColors.set(Suits.heart,Color.Red)
+SuitColors.set(Suits.diamond,Color.Red)
+
 export enum LocationType {
   Deck = 'deck',
   Stock = 'stock',
@@ -31,6 +42,18 @@ export const Locations = {
   },
 
   Foundation0: {
+    type: LocationType.Foundation,
+    index: 0,
+  },
+  Foundation1: {
+    type: LocationType.Foundation,
+    index: 0,
+  },
+  Foundation2: {
+    type: LocationType.Foundation,
+    index: 0,
+  },
+  Foundation3: {
     type: LocationType.Foundation,
     index: 0,
   },
@@ -88,11 +111,22 @@ export type Location = Readonly<{
   type: LocationType;
 }>;
 
-export type GameBoard = Record<LocationType, Pile[]>;
+export type GameBoard = Record<LocationType, Pile[]>
+export type Rule = Record<LocationType, (gameBoard:GameBoard, from:Location|Card|Pile, to:Location|Card|Pile)=>boolean>  
+
+export type Game = {
+  meta:{
+    type:Games
+  }
+  board: GameBoard 
+  rules: Rule 
+}
 
 export enum ActionType {
   Card = 'Card',
   Location = 'Location',
+
+  Pile = 'Pile',
   Noop = 'Noop',
 }
 export type Action = Readonly<{
@@ -102,17 +136,17 @@ export type Action = Readonly<{
 
 export type Actions = readonly Action[];
 
-export type ActionFunction = (game: GameBoard, actions: Actions) => ActionResult;
+export type ActionFunction = (game: Game, actions: Actions) => ActionResult;
 
 export type ActionResult = {
-  game: GameBoard;
+  game: Game;
   actions: Actions;
   log: [];
 };
 
 export type Undo = Readonly<{
-  current: GameBoard;
-  stack: readonly GameBoard[];
+  current: Game;
+  stack: readonly Game[];
 }>;
 
 export enum GameState {
@@ -131,4 +165,12 @@ export type DeckGeneratorAction = Readonly<{
   value: string;
 }>;
 
-export type DeckGenerator = Map<String, (value: string) => GameBoard>;
+export type DeckGenerator = Map<String, (value: string) => Game>;
+
+export enum Games {
+  Accordion = 'Accordion',
+  AceOfHearts = 'AceOfHearts',
+
+  Queenie = 'Queenie',
+  BuildDeck = 'BuildDeck',
+}

@@ -1,4 +1,15 @@
-import { ActionFunction, GameBoard, Actions, ActionType, Card, Face, Locations, DeckGenerator, DeckGenerators, GameState } from '../solitaireTypes';
+import {
+  ActionFunction,
+  Game,
+  Actions,
+  ActionType,
+  Card,
+  Face,
+  Locations,
+  DeckGenerator,
+  DeckGenerators,
+  GameState,
+} from '../solitaireTypes';
 import { setDefault, actionsTypeHash, execute } from '../action';
 import { removeFromPile, getPile, updatePile } from '../gameBoard';
 import { turnCard, moveCard } from '../card';
@@ -9,11 +20,11 @@ import { DefaultDeck, deckFromString } from '..//deck';
 
 let actionSet = new Map<String, ActionFunction>();
 
-setDefault(actionSet, (game: GameBoard, actions: Actions) => {
+setDefault(actionSet, (game: Game, actions: Actions) => {
   return { game, actions, log: [] };
 });
 
-actionSet.set(actionsTypeHash([ActionType.Card]), (game: GameBoard, actions: Actions) => {
+actionSet.set(actionsTypeHash([ActionType.Card]), (game: Game, actions: Actions) => {
   let card = actions[0].value as Card;
   let result = removeFromPile(game, card);
   card = turnCard(card, Face.Down);
@@ -26,7 +37,7 @@ actionSet.set(actionsTypeHash([ActionType.Card]), (game: GameBoard, actions: Act
   return { game: result, actions: [], log: [] };
 });
 
-let deckGenerator: DeckGenerator = new Map<String, (value: string) => GameBoard>();
+let deckGenerator: DeckGenerator = new Map<String, (value: string) => Game>();
 deckGenerator.set(DeckGenerators.Seed, _value => {
   return create(DefaultDeck);
 });
@@ -34,7 +45,7 @@ deckGenerator.set(DeckGenerators.PreBuilt, value => {
   return create(deckFromString(value));
 });
 
-function getGameState(_game: GameBoard) {
+function getGameState(_game: Game) {
   return GameState.InProgress;
 }
 

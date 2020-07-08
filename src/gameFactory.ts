@@ -1,20 +1,15 @@
-import { GameBoard, Actions, ActionResult, DeckGeneratorAction, GameState } from 'solitaireTypes';
+import { Game, Actions, ActionResult, DeckGeneratorAction, GameState, Games } from './solitaireTypes';
 import { api as accordion } from './games/accordionAPI';
 import { api as aceOfHearts } from './games/aceOfHeartsAPI';
 import { api as buildDeck } from './games/buildDeckAPI';
 
-export enum Games {
-  Accordion = 'Accordion',
-  AceOfHearts = 'AceOfHearts',
 
-  BuildDeck = 'BuildDeck',
-}
 
 export interface GameAPI {
-  create: (generator: DeckGeneratorAction) => GameBoard;
-  action: (game: GameBoard, actions: Actions) => ActionResult;
+  create: (generator: DeckGeneratorAction) => Game;
+  action: (game: Game, actions: Actions) => ActionResult;
 
-  state: (game: GameBoard) => GameState;
+  state: (game: Game) => GameState;
 }
 
 let gameAPI = new Map<Games, GameAPI>();

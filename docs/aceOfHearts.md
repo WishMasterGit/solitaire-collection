@@ -22,4 +22,4 @@ Ace of Hearts is a variation of Queenie and was invented by Thomas Warfield.
 
 ## Similar Games
 
-Queenie,Yukon
+[Queenie](queenie.md),Yukon
