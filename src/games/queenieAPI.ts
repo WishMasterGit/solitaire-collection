@@ -12,9 +12,7 @@ import {
   GameState,
   Games,
 } from '../solitaireTypes';
-import {
-  createGame,
-} from './queenie';
+import { createGame } from './queenie';
 import { GameAPI } from '../gameFactory';
 import { shuffleDeck, DefaultDeck, deckFromString } from '../deck';
 import { getPile, createAndDeal, moveSubPile } from '../gameBoard';
@@ -52,7 +50,7 @@ actionSet.set(
   (game: Game, actions: Actions) => {
     const [fromCard, toCard] = actions.map(a => a.value) as [Card, Card];
     const fromCardPile = getPile(game, fromCard.location);
-    const toPile = getPile(game,toCard.location)
+    const toPile = getPile(game, toCard.location);
     if (
       fromCard.location.type === LocationType.Tableau &&
       toCard.location.type === LocationType.Tableau &&
@@ -77,7 +75,7 @@ actionSet.set(
   (game: Game, actions: Actions) => {
     let [fromCard, toLocation] = actions.map(a => a.value) as [Card, Location];
     const fromCardPile = getPile(game, fromCard.location);
-    const toPile = getPile(game, toLocation)
+    const toPile = getPile(game, toLocation);
     if (
       fromCard.location.type === LocationType.Tableau &&
       toLocation.type === LocationType.Foundation &&

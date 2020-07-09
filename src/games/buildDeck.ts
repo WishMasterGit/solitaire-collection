@@ -17,36 +17,30 @@ import produce from 'immer';
 export let create = (deck: Deck): Game => {
   let game: Game = {
     meta: {
-      type: Games.BuildDeck
+      type: Games.BuildDeck,
     },
     board: {
-      [LocationType.Stock]: [
-        { cards: deck.cards, location: Locations.Stock },
-      ],
-      [LocationType.Tableau]: [
-        { cards: [], location: Locations.Tableau0 },
-      ],
-      [LocationType.Waste]: [
-        { cards: [], location: Locations.Waste0 },
-      ],
+      [LocationType.Stock]: [{ cards: deck.cards, location: Locations.Stock }],
+      [LocationType.Tableau]: [{ cards: [], location: Locations.Tableau0 }],
+      [LocationType.Waste]: [{ cards: [], location: Locations.Waste0 }],
       [LocationType.Foundation]: [],
       [LocationType.Deck]: [],
     },
     rules: {
-      [LocationType.Stock]: (_from,_to):boolean=>false,
-      [LocationType.Tableau]: (_from,_to):boolean=>false,
-      [LocationType.Waste]: (_from,_to):boolean=>false,
-      [LocationType.Foundation]: (_from,_to):boolean=>false,
-      [LocationType.Deck]: (_from,_to):boolean=>false,
-    }
+      [LocationType.Stock]: (_from, _to): boolean => false,
+      [LocationType.Tableau]: (_from, _to): boolean => false,
+      [LocationType.Waste]: (_from, _to): boolean => false,
+      [LocationType.Foundation]: (_from, _to): boolean => false,
+      [LocationType.Deck]: (_from, _to): boolean => false,
+    },
   };
 
   return game;
 };
 
 export function stockClick(game: Game): [Card, Game] {
-  let stock = getPile(game, Locations.Stock);
-  let tableau = getPile(game, Locations.Tableau0);
+  let stock = getPile(game.board, Locations.Stock);
+  let tableau = getPile(game.board, Locations.Tableau0);
   let card = _(stock.cards).last() as Card;
   card = turnCard(card, Face.Up);
   card = moveCard(card, Locations.Tableau0);
@@ -61,10 +55,10 @@ export function stockClick(game: Game): [Card, Game] {
   return [card, game];
 }
 export function autoDeal(game: Game): Game {
-  let stock = getPile(game, Locations.Stock);
+  let stock = getPile(game.board, Locations.Stock);
   while (stock.cards.length > 0) {
     game = stockClick(game)[1];
-    stock = getPile(game, Locations.Stock);
+    stock = getPile(game.board, Locations.Stock);
   }
   return game;
 }

@@ -1,11 +1,4 @@
-import {
-  Actions,
-  Action,
-  ActionType,
-  ActionFunction,
-  ActionResult,
-  Game,
-} from 'solitaireTypes';
+import { Actions, Action, ActionType, ActionFunction, ActionResult, Game } from 'solitaireTypes';
 import produce from 'immer';
 import _ from 'lodash';
 export function newAction(actions: Actions, action: Action): Actions {

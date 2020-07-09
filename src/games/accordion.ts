@@ -1,12 +1,4 @@
-import {
-  Card,
-  LocationType,
-  Game,
-  Locations,
-  Deck,
-  Games,
-  GameBoard 
-} from '../solitaireTypes';
+import { Card, LocationType, Game, Locations, Deck, Games, GameBoard } from '../solitaireTypes';
 import produce from 'immer';
 import _ from 'lodash';
 import { moveCard } from '../card';
@@ -15,7 +7,7 @@ import { getPile, updatePile, as, asCard, findInPile } from '../gameBoard';
 export let create = (deck: Deck): Game => {
   let game: Game = {
     meta: {
-      type: Games.Accordion
+      type: Games.Accordion,
     },
     board: {
       [LocationType.Stock]: [{ cards: deck.cards, location: Locations.Stock }],
@@ -25,21 +17,21 @@ export let create = (deck: Deck): Game => {
       [LocationType.Deck]: [],
     },
     rules: {
-      [LocationType.Stock]: (_from,_to):boolean=>false,
-      [LocationType.Tableau]: (gameBoard, from,to):boolean=>{
-          return [as([asCard(from), asCard(to)], (fromCard: Card, toCard: Card): boolean => {
-            return canMoveCard(gameBoard,fromCard,toCard)
-          })]
-          .reduce((a, b) => a || b)
+      [LocationType.Stock]: (_from, _to): boolean => false,
+      [LocationType.Tableau]: (gameBoard, from, to): boolean => {
+        return [
+          as([asCard(from), asCard(to)], (fromCard: Card, toCard: Card): boolean => {
+            return canMoveCard(gameBoard, fromCard, toCard);
+          }),
+        ].reduce((a, b) => a || b);
       },
-      [LocationType.Waste]: (_from,_to):boolean=>false,
-      [LocationType.Foundation]: (_from,_to):boolean=>false,
-      [LocationType.Deck]: (_from,_to):boolean=>false,
-    }
+      [LocationType.Waste]: (_from, _to): boolean => false,
+      [LocationType.Foundation]: (_from, _to): boolean => false,
+      [LocationType.Deck]: (_from, _to): boolean => false,
+    },
   };
   return game;
 };
-
 
 export function selectCard(game: Game, index: number): [number, Card] {
   const tableau = getPile(game.board, Locations.Tableau0);
@@ -64,10 +56,16 @@ export function moveCardTo(game: Game, fromCard: Card, toCard: Card): Game {
   fromCard = moveCard(fromCard, Locations.Tableau0);
   toCard = moveCard(fromCard, Locations.Tableau0);
   let tableau = getPile(game.board, Locations.Tableau0);
-  tableau = produce(tableau, draft => { draft.cards.splice(to, 1, fromCard); });
-  tableau = produce(tableau, draft => { draft.cards.splice(from, 1); });
+  tableau = produce(tableau, draft => {
+    draft.cards.splice(to, 1, fromCard);
+  });
+  tableau = produce(tableau, draft => {
+    draft.cards.splice(from, 1);
+  });
   let waste = getPile(game.board, Locations.Waste0);
-  waste = produce(waste, draft => { draft.cards.push(toCard); });
+  waste = produce(waste, draft => {
+    draft.cards.push(toCard);
+  });
   game = updatePile(game, tableau);
   game = updatePile(game, waste);
   return game;

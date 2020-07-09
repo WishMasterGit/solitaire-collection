@@ -1,9 +1,14 @@
-import { Game, Actions, ActionResult, DeckGeneratorAction, GameState, Games } from './solitaireTypes';
+import {
+  Game,
+  Actions,
+  ActionResult,
+  DeckGeneratorAction,
+  GameState,
+  Games,
+} from './solitaireTypes';
 import { api as accordion } from './games/accordionAPI';
 import { api as aceOfHearts } from './games/aceOfHeartsAPI';
 import { api as buildDeck } from './games/buildDeckAPI';
-
-
 
 export interface GameAPI {
   create: (generator: DeckGeneratorAction) => Game;

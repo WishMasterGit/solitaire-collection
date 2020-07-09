@@ -18,14 +18,14 @@ export enum Suits {
 
 export enum Color {
   Red = 'Red',
-  Black = 'Black'
+  Black = 'Black',
 }
 
-export const SuitColors = new Map<Suits,Color>()
-SuitColors.set(Suits.clubs,Color.Black)
-SuitColors.set(Suits.spade,Color.Black)
-SuitColors.set(Suits.heart,Color.Red)
-SuitColors.set(Suits.diamond,Color.Red)
+export const SuitColors = new Map<Suits, Color>();
+SuitColors.set(Suits.clubs, Color.Black);
+SuitColors.set(Suits.spade, Color.Black);
+SuitColors.set(Suits.heart, Color.Red);
+SuitColors.set(Suits.diamond, Color.Red);
 
 export enum LocationType {
   Deck = 'deck',
@@ -111,16 +111,19 @@ export type Location = Readonly<{
   type: LocationType;
 }>;
 
-export type GameBoard = Record<LocationType, Pile[]>
-export type Rule = Record<LocationType, (gameBoard:GameBoard, from:Location|Card|Pile, to:Location|Card|Pile)=>boolean>  
+export type GameBoard = Record<LocationType, Pile[]>;
+export type Rule = Record<
+  LocationType,
+  (gameBoard: GameBoard, from: Location | Card | Pile, to: Location | Card | Pile) => boolean
+>;
 
 export type Game = {
-  meta:{
-    type:Games
-  }
-  board: GameBoard 
-  rules: Rule 
-}
+  meta: {
+    type: Games;
+  };
+  board: GameBoard;
+  rules: Rule;
+};
 
 export enum ActionType {
   Card = 'Card',

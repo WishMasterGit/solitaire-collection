@@ -29,7 +29,7 @@ actionSet.set(actionsTypeHash([ActionType.Card]), (game: Game, actions: Actions)
   let result = removeFromPile(game, card);
   card = turnCard(card, Face.Down);
   card = moveCard(card, Locations.Stock);
-  let stock = getPile(result, Locations.Stock);
+  let stock = getPile(result.board, Locations.Stock);
   stock = produce(stock, draft => {
     draft.cards.push(card);
   });

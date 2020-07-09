@@ -1,4 +1,16 @@
-import { Location, Game, Pile, Card,GameBoard, Face, DeckGenerator, DeckGeneratorAction, Games, LocationType, Suits } from './solitaireTypes';
+import {
+  Location,
+  Game,
+  Pile,
+  Card,
+  GameBoard,
+  Face,
+  DeckGenerator,
+  DeckGeneratorAction,
+  Games,
+  LocationType,
+  Suits,
+} from './solitaireTypes';
 import produce, { castDraft, Draft } from 'immer';
 import _ from 'lodash';
 import { turnCard, moveCard, moveCards } from './card';
@@ -47,12 +59,7 @@ export function getCardFrom(game: Game, location: Location): [Card, Game] {
   return [card, updatePile(game, pile)];
 }
 
-export function moveLastCard(
-  game: Game,
-  from: Location,
-  to: Location,
-  cardFace: Face = Face.Up
-) {
+export function moveLastCard(game: Game, from: Location, to: Location, cardFace: Face = Face.Up) {
   let [card, newGame] = getCardFrom(game, from);
   card = turnCard(card, cardFace);
   card = moveCard(card, to);
@@ -91,33 +98,58 @@ export const createAndDeal = _.curry(
   }
 );
 
+export const asCard = (a: any): Card | undefined => {
+  const comp: Card = {
+    rank: 0,
+    suit: Suits.clubs,
+    face: 0,
+    location: { index: 0, type: LocationType.Deck },
+  };
+  if (
+    Object.keys(a)
+      .sort()
+      .toString() ===
+    Object.keys(comp)
+      .sort()
+      .toString()
+  ) {
+    return a as Card;
+  } else return undefined;
+};
+export const asPile = (a: any): Pile | undefined => {
+  const comp: Pile = { cards: [], location: { index: 0, type: LocationType.Deck } };
+  if (
+    Object.keys(a)
+      .sort()
+      .toString() ===
+    Object.keys(comp)
+      .sort()
+      .toString()
+  ) {
+    return a as Pile;
+  } else return undefined;
+};
+export const asLocation = (a: any): Location | undefined => {
+  const comp: Location = { index: 0, type: LocationType.Deck };
+  if (
+    Object.keys(a)
+      .sort()
+      .toString() ===
+    Object.keys(comp)
+      .sort()
+      .toString()
+  ) {
+    return a as Location;
+  } else return undefined;
+};
 
-export const asCard = (a:any):Card|undefined =>{
-  const comp: Card = { rank: 0, suit: Suits.clubs, face: 0, location: { index: 0, type: LocationType.Deck } }
-  if(Object.keys(a).sort().toString() === Object.keys(comp).sort().toString()){
-    return a as Card
-  }
-  else return undefined
-}
-export const asPile = (a:any):Pile|undefined =>{
-  const comp: Pile= { cards:[], location: { index: 0, type: LocationType.Deck } }
-  if(Object.keys(a).sort().toString() === Object.keys(comp).sort().toString()){
-    return a as Pile
-  }
-  else return undefined
-}
-export const asLocation = (a:any):Location|undefined =>{
-  const comp: Location = { index: 0, type: LocationType.Deck }
-  if(Object.keys(a).sort().toString() === Object.keys(comp).sort().toString()){
-    return a as Location
-  }
-  else return undefined
-}
-
-export const as = <G extends unknown, D extends unknown>(arg: (Card | Location | Pile | undefined)[], fn: (from: G, to: D) => boolean) => {
+export const as = <G extends unknown, D extends unknown>(
+  arg: (Card | Location | Pile | undefined)[],
+  fn: (from: G, to: D) => boolean
+) => {
   const [fromCard, toCard] = arg as [G, D];
   if (fromCard && toCard) {
-    return fn(fromCard, toCard)
+    return fn(fromCard, toCard);
   }
-  return false
-}
+  return false;
+};

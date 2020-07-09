@@ -1,9 +1,20 @@
-import { DeckGenerator, Game, DeckGenerators, ActionFunction, Actions, ActionType, Card, GameState, Locations, Games, } from '../solitaireTypes';
+import {
+  DeckGenerator,
+  Game,
+  DeckGenerators,
+  ActionFunction,
+  Actions,
+  ActionType,
+  Card,
+  GameState,
+  Locations,
+  Games,
+} from '../solitaireTypes';
 import { create, moveCardTo, anyMovesLeft } from './accordion';
 import { shuffleDeck, DefaultDeck, deckFromString } from '../deck';
 import { setDefault, actionsTypeHash, execute } from '../action';
 import { getPile, createAndDeal } from '../gameBoard';
-import { GameAPI} from '../gameFactory';
+import { GameAPI } from '../gameFactory';
 
 const deckGenerator: DeckGenerator = new Map<String, (value: string) => Game>();
 deckGenerator.set(DeckGenerators.Seed, value => {
@@ -23,8 +34,8 @@ actionSet.set(
   (game: Game, actions: Actions) => {
     const [fromCard, toCard] = actions.map(a => a.value) as [Card, Card];
 
-    if (game.rules[Locations.Tableau0.type](game.board,fromCard, toCard)) {
-      return {game:moveCardTo(game, fromCard, toCard), actions:[], log:[]};
+    if (game.rules[Locations.Tableau0.type](game.board, fromCard, toCard)) {
+      return { game: moveCardTo(game, fromCard, toCard), actions: [], log: [] };
     }
     return { game: game, actions: [], log: [] };
   }
