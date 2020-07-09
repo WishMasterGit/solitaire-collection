@@ -5,16 +5,12 @@ import {
   Card,
   GameBoard,
   Face,
-  DeckGenerator,
-  DeckGeneratorAction,
-  Games,
   LocationType,
   Suits,
 } from './solitaireTypes';
 import produce, { castDraft, Draft } from 'immer';
 import _ from 'lodash';
 import { turnCard, moveCard, moveCards } from './card';
-import { initialDeal } from './stock';
 export function getPile(gameBoard: GameBoard, location: Location): Pile {
   return gameBoard[location.type][location.index];
 }
@@ -91,12 +87,6 @@ export function splitPile(game: Game, from: Card): { sub: Pile; rest: Pile } {
   };
 }
 
-export const createAndDeal = _.curry(
-  (dealStyle: Games, deckGenerator: DeckGenerator, action: DeckGeneratorAction): Game => {
-    const game = deckGenerator.get(action.type)?.(action.value) as Game;
-    return initialDeal(game, dealStyle);
-  }
-);
 
 export const asCard = (a: any): Card | undefined => {
   const comp: Card = {

@@ -13,8 +13,9 @@ import {
 import { create, moveCardTo, anyMovesLeft } from './accordion';
 import { shuffleDeck, DefaultDeck, deckFromString } from '../deck';
 import { setDefault, actionsTypeHash, execute } from '../action';
-import { getPile, createAndDeal } from '../gameBoard';
+import { getPile } from '../gameBoard';
 import { GameAPI } from '../gameFactory';
+import { createAndDeal } from '../deal';
 
 const deckGenerator: DeckGenerator = new Map<String, (value: string) => Game>();
 deckGenerator.set(DeckGenerators.Seed, value => {

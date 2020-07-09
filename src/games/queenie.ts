@@ -1,5 +1,4 @@
 import { Game, LocationType, Deck, Locations, Games, Card, SuitColors } from '../solitaireTypes';
-import _ from 'lodash';
 import { moveCards } from '../card';
 
 export const createGame = (deck: Deck): Game => {

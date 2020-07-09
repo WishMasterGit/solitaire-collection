@@ -16,9 +16,9 @@ import {
 import { createGame, anyMovesLeft } from './aceOfHearts';
 import { GameAPI } from '../gameFactory';
 import { shuffleDeck, DefaultDeck, deckFromString } from '../deck';
-import { getPile, createAndDeal, moveSubPile, asCard } from '../gameBoard';
-import _ from 'lodash';
+import { getPile, moveSubPile, asCard } from '../gameBoard';
 import { deal } from '../stock';
+import { createAndDeal } from '../deal';
 
 function moveCards(game: Game, fromCard: Card, toLocation: Location) {
   const toPile = getPile(game.board, toLocation);
