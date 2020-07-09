@@ -1,6 +1,5 @@
 import { Card, LocationType, Game, Locations, Deck, Games, GameBoard } from '../solitaireTypes';
 import produce from 'immer';
-import _ from 'lodash';
 import { moveCard } from '../card';
 import { getPile, updatePile, as, asCard, findInPile } from '../gameBoard';
 

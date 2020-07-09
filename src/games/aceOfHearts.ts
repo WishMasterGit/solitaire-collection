@@ -51,19 +51,24 @@ export const createGame = (deck: Deck): Game => {
             return check(outsideOfTableau, fromCard, toPile)
               .chainLeft(is(emptyPileOrKing, fromCard, toPile))
               .chainLeft(is(pileWithCards, _(toPile.cards).last() as Card, fromCard, toPile))
-              .orDefault(false)
-          }),
+              .orDefault(false);
+          })
         );
       },
       [LocationType.Waste]: (_game, _from, _to): boolean => false,
       [LocationType.Foundation]: (gameBoard, from, to): boolean => {
         return match(
           as([asCard(from), asPile(to)], (fromCard: Card, toPile: Pile): boolean => {
-            return check(notFromTableauToFoundation, fromCard, toPile, getPile(gameBoard, fromCard.location))
-                    .chainLeft(is(emptyFoundation, fromCard, toPile))
-                    .chainLeft(is(notEmptyFoundation, fromCard, toPile,_(toPile.cards).last() as Card))
-                    .orDefault(false)
-          }),
+            return check(
+              notFromTableauToFoundation,
+              fromCard,
+              toPile,
+              getPile(gameBoard, fromCard.location)
+            )
+              .chainLeft(is(emptyFoundation, fromCard, toPile))
+              .chainLeft(is(notEmptyFoundation, fromCard, toPile, _(toPile.cards).last() as Card))
+              .orDefault(false);
+          })
         );
       },
       [LocationType.Deck]: (_game, _from, _to): boolean => false,
@@ -72,24 +77,43 @@ export const createGame = (deck: Deck): Game => {
   return game;
 };
 
-const outsideOfTableau: CaseType = [(fromCard: Card, toPile: Pile) => fromCard.location.type !== LocationType.Tableau && toPile.location.type !== LocationType.Tableau, false]
-const emptyPileOrKing: CaseType = [(fromCard: Card, toPile: Pile) => toPile.cards.length === 0 && fromCard.rank === Rank.K, true]
-const pileWithCards: CaseType = [(lastCard: Card, fromCard: Card, toPile: Pile) => 
-  toPile.cards.length !== 0 && 
-  fromCard.location !== lastCard.location && 
-  lastCard.rank - fromCard.rank === 1 && lastCard.suit === fromCard.suit, true]
+const outsideOfTableau: CaseType = [
+  (fromCard: Card, toPile: Pile) =>
+    fromCard.location.type !== LocationType.Tableau &&
+    toPile.location.type !== LocationType.Tableau,
+  false,
+];
+const emptyPileOrKing: CaseType = [
+  (fromCard: Card, toPile: Pile) => toPile.cards.length === 0 && fromCard.rank === Rank.K,
+  true,
+];
+const pileWithCards: CaseType = [
+  (lastCard: Card, fromCard: Card, toPile: Pile) =>
+    toPile.cards.length !== 0 &&
+    fromCard.location !== lastCard.location &&
+    lastCard.rank - fromCard.rank === 1 &&
+    lastCard.suit === fromCard.suit,
+  true,
+];
 
-const notFromTableauToFoundation:CaseType = [(fromCard: Card, toPile: Pile, fromCardPile: Pile) => fromCard.location.type !== LocationType.Tableau && toPile.location.type !== LocationType.Foundation && fromCard !== _.last(fromCardPile.cards), false]
-const emptyFoundation:CaseType = [(fromCard:Card,toPile:Pile)=>
-  toPile.cards.length === 0 &&
-  fromCard.suit === Suits.heart &&
-  fromCard.rank === Rank.A,
-  true]
-const notEmptyFoundation:CaseType = [(fromCard:Card, toPile:Pile, lastCard:Card)=>
-    toPile.cards.length !== 0 && 
-    (lastCard.rank - fromCard.rank === 1 ||
-    (lastCard.rank === Rank.K && fromCard.rank === Rank.A)),
-    true]
+const notFromTableauToFoundation: CaseType = [
+  (fromCard: Card, toPile: Pile, fromCardPile: Pile) =>
+    fromCard.location.type !== LocationType.Tableau &&
+    toPile.location.type !== LocationType.Foundation &&
+    fromCard !== _.last(fromCardPile.cards),
+  false,
+];
+const emptyFoundation: CaseType = [
+  (fromCard: Card, toPile: Pile) =>
+    toPile.cards.length === 0 && fromCard.suit === Suits.heart && fromCard.rank === Rank.A,
+  true,
+];
+const notEmptyFoundation: CaseType = [
+  (fromCard: Card, toPile: Pile, lastCard: Card) =>
+    toPile.cards.length !== 0 &&
+    (lastCard.rank - fromCard.rank === 1 || (lastCard.rank === Rank.K && fromCard.rank === Rank.A)),
+  true,
+];
 
 export function anyMovesLeft(game: Game): [boolean, Card | undefined, Card | undefined] {
   const lastCards = game.board.tableau
