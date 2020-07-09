@@ -11,9 +11,7 @@ const tableauPyramidLike = (game: Game): Game => {
   for (let tableau of tableaus) {
     for (let j = 1; j <= tableau.location.index + 1; j++) {
       if (canGetCradFrom(game, Locations.Stock)) {
-        game = produce(game, _draft =>
-          moveLastCard(game, Locations.Stock, tableau.location)
-        );
+        game = produce(game, _draft => moveLastCard(game, Locations.Stock, tableau.location));
       }
     }
   }
@@ -42,15 +40,14 @@ const deals = new Map<Games, (game: Game) => Game>();
 
 const pyramidLikeDeal = (game: Game) => {
   let tableaus = game.board[LocationType.Tableau];
-  let newGame = game;
   for (let tableau of tableaus) {
-    if (canGetCradFrom(newGame, Locations.Stock)) {
-      newGame = produce(newGame, _draft =>
-        moveLastCard(newGame, Locations.Stock, tableau.location)
+    if (canGetCradFrom(game, Locations.Stock)) {
+      game = produce(game, _draft =>
+        moveLastCard(game, Locations.Stock, tableau.location)
       );
     }
   }
-  return newGame;
+  return game;
 };
 
 deals.set(Games.AceOfHearts, pyramidLikeDeal);
