@@ -1,6 +1,5 @@
 import { Game, LocationType, Locations, Games } from './solitaireTypes';
 import { canGetCradFrom, moveLastCard, getPile } from './gameBoard';
-import produce from 'immer';
 
 export function initialDeal(game: Game, gameType: Games): Game {
   return initialDeals.get(gameType)?.(game) as Game;
@@ -11,7 +10,7 @@ const tableauPyramidLike = (game: Game): Game => {
   for (let tableau of tableaus) {
     for (let j = 1; j <= tableau.location.index + 1; j++) {
       if (canGetCradFrom(game, Locations.Stock)) {
-        game = produce(game, _draft => moveLastCard(game, Locations.Stock, tableau.location));
+        game = moveLastCard(game, Locations.Stock, tableau.location);
       }
     }
   }
@@ -37,14 +36,11 @@ export function deal(game: Game, gameType: Games): Game {
 }
 
 const deals = new Map<Games, (game: Game) => Game>();
-
 const pyramidLikeDeal = (game: Game) => {
   let tableaus = game.board[LocationType.Tableau];
   for (let tableau of tableaus) {
     if (canGetCradFrom(game, Locations.Stock)) {
-      game = produce(game, _draft =>
-        moveLastCard(game, Locations.Stock, tableau.location)
-      );
+      game = moveLastCard(game, Locations.Stock, tableau.location);
     }
   }
   return game;
