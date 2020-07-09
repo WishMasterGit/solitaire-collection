@@ -8,17 +8,16 @@ export function initialDeal(game: Game, gameType: Games): Game {
 
 const tableauPyramidLike = (game: Game): Game => {
   let tableaus = game.board[LocationType.Tableau];
-  let newGame = game;
   for (let tableau of tableaus) {
     for (let j = 1; j <= tableau.location.index + 1; j++) {
-      if (canGetCradFrom(newGame, Locations.Stock)) {
-        newGame = produce(newGame, _draft =>
-          moveLastCard(newGame, Locations.Stock, tableau.location)
+      if (canGetCradFrom(game, Locations.Stock)) {
+        game = produce(game, _draft =>
+          moveLastCard(game, Locations.Stock, tableau.location)
         );
       }
     }
   }
-  return newGame;
+  return game;
 };
 
 const tableauInline = (game: Game) => {

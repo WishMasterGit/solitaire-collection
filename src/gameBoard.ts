@@ -1,13 +1,4 @@
-import {
-  Location,
-  Game,
-  Pile,
-  Card,
-  GameBoard,
-  Face,
-  LocationType,
-  Suits,
-} from './solitaireTypes';
+import { Location, Game, Pile, Card, GameBoard, Face, LocationType, Suits } from './solitaireTypes';
 import produce, { castDraft, Draft } from 'immer';
 import _ from 'lodash';
 import { turnCard, moveCard, moveCards } from './card';
@@ -86,7 +77,6 @@ export function splitPile(game: Game, from: Card): { sub: Pile; rest: Pile } {
     rest: { cards: restOfPile, location: pile.location },
   };
 }
-
 
 export const asCard = (a: any): Card | undefined => {
   const comp: Card = {
