@@ -1,4 +1,4 @@
-import { Game, LocationType, Locations, Games } from './solitaireTypes';
+import { Game, LocationType, Locations, Games, Face } from './solitaireTypes';
 import { canGetCradFrom, moveLastCard, getPile } from './gameBoard';
 
 export function initialDeal(game: Game, gameType: Games): Game {
@@ -17,6 +17,26 @@ const tableauPyramidLike = (game: Game): Game => {
   return game;
 };
 
+const tableauYukonLike = (game: Game): Game => {
+  let tableaus = game.board[LocationType.Tableau];
+  for (let tableau of tableaus) {
+    switch (tableau.location.index) {
+      case 0:
+        if (canGetCradFrom(game, Locations.Stock)) {
+          game = moveLastCard(game, Locations.Stock, tableau.location);
+        }
+        break;
+      default:
+        for (let j = 1; j <= tableau.location.index + 5; j++) {
+          if (canGetCradFrom(game, Locations.Stock)) {
+            game = moveLastCard(game, Locations.Stock, tableau.location, j <= tableau.location.index ? Face.Down : Face.Up);
+          }
+        }
+    }
+  }
+  return game;
+};
+
 const tableauInline = (game: Game) => {
   let stock = getPile(game.board, Locations.Stock);
   while (stock.cards.length > 0) {
@@ -29,6 +49,7 @@ const tableauInline = (game: Game) => {
 const initialDeals = new Map<Games, (game: Game) => Game>();
 initialDeals.set(Games.AceOfHearts, tableauPyramidLike);
 initialDeals.set(Games.Queenie, tableauPyramidLike);
+initialDeals.set(Games.Yukon, tableauYukonLike);
 initialDeals.set(Games.Accordion, tableauInline);
 
 export function deal(game: Game, gameType: Games): Game {

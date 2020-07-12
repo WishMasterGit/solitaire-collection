@@ -7,7 +7,7 @@ import { asCard, as, asPile, getPile } from '../gameBoard';
 export const createGame = (deck: Deck): Game => {
   let game: Game = {
     meta: {
-      type: Games.Queenie,
+      type: Games.Yukon,
     },
     board: {
       [LocationType.Stock]: [

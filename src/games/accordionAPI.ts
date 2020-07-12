@@ -8,9 +8,8 @@ import {
   Card,
   GameState,
   Locations,
-  Games,
 } from '../solitaireTypes';
-import { create, moveCardTo, anyMovesLeft } from './accordion';
+import { create, moveCardTo, rules } from './accordion';
 import { shuffleDeck, DefaultDeck, deckFromString } from '../deck';
 import { setDefault, actionsTypeHash, execute } from '../action';
 import { getPile } from '../gameBoard';
@@ -35,7 +34,7 @@ actionSet.set(
   (game: Game, actions: Actions) => {
     const [fromCard, toCard] = actions.map(a => a.value) as [Card, Card];
 
-    if (game.rules[Locations.Tableau0.type](game.board, fromCard, toCard)) {
+    if (rules[Locations.Tableau0.type](game.board, fromCard, toCard)) {
       return { game: moveCardTo(game, fromCard, toCard), actions: [], log: [] };
     }
     return { game: game, actions: [], log: [] };
@@ -43,19 +42,19 @@ actionSet.set(
 );
 
 export function getGameState(game: Game): GameState {
-  const [anyMoves] = anyMovesLeft(game);
+  // const [anyMoves] = anyMovesLeft(game);
   const waste = getPile(game.board, Locations.Waste0);
-  if (!anyMoves) {
-    return GameState.NoMoreMoves;
-  }
-  if (waste.cards.length === 52) {
+  if (waste.cards.length === 51) {
     return GameState.GameOver;
   }
+  // if (!anyMoves) {
+  //   return GameState.NoMoreMoves;
+  // }
   return GameState.InProgress;
 }
 
 export const api: GameAPI = {
-  create: createAndDeal(Games.Accordion)(deckGenerator),
+  create: createAndDeal(deckGenerator),
   action: execute(actionSet),
   state: getGameState,
 };

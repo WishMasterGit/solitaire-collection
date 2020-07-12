@@ -1,9 +1,8 @@
-import {  execute } from '../action';
-import { createGame, rules, anyMovesLeft } from './aceOfHearts';
+import { execute } from '../action';
+import { createGame, anyMovesLeft, rules } from './yukon';
 import { GameAPI } from '../gameFactory';
 import { createAndDeal } from '../deal';
-import { getActionSet, getDeckGenerator, getGameState } from './commonAPIfunc';
-
+import { getDeckGenerator, getActionSet, getGameState } from './commonAPIfunc';
 
 export const api: GameAPI = {
   create: createAndDeal(getDeckGenerator(createGame)),

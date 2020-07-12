@@ -5,9 +5,10 @@ import {
 } from '../../src/games/accordion';
 
 import {api} from '../../src/games/accordionAPI';
-import { Game, LocationType, ActionType, GameState, DeckGenerators, Locations } from '../../src/solitaireTypes';
+import { Game, LocationType, ActionType, GameState, DeckGenerators, Locations, Actions } from '../../src/solitaireTypes';
 import { getPile } from '../../src/gameBoard';
 import { newAction } from '../../src/action';
+import {gameActions, customDeck} from '../gameReps/accordionFullGame'
 
 let defaultGame = (seed = "default") => api.create({type:DeckGenerators.Seed, value:seed})
 
@@ -65,4 +66,16 @@ describe('accordion', () => {
     expect(tableau.cards).not.toContainEqual(toCard);
     expect(result.actions.length).toEqual(0)
   });
+  test('full game', ()=>{
+    let game = api.create(customDeck);
+    let actions = gameActions as Actions[];
+    let nextAction:Actions = actions.shift() as Actions
+    while(actions.length > 0){
+      let result = api.action(game,nextAction)
+      nextAction = actions.shift() as Actions
+      game = result.game
+      // expect(api.state(game)).toEqual(GameState.InProgress)
+    } 
+    expect(api.state(game)).toEqual(GameState.GameOver)
+  })
 });

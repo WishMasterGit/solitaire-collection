@@ -1,7 +1,8 @@
 import {api} from '../../src/games/aceOfHeartsAPI'
-import { Game, LocationType, ActionType, Suits, DeckGenerators, GameState} from '../../src/solitaireTypes';
+import { Game, LocationType, ActionType, Suits, DeckGenerators, GameState, Actions} from '../../src/solitaireTypes';
 import { newAction} from '../../src/action';
 import { cardFromString } from '../../src/card';
+import {gameActions, customDeck} from '../gameReps/aceOfHeartsFullGame'
 
 let defaultGame = (seed = "default") => api.create({type:DeckGenerators.Seed, value:seed})
 
@@ -105,5 +106,17 @@ describe('aceOfHeartsTest', () => {
     let game = api.create({type:DeckGenerators.PreBuilt, value:'1C0deck0'})
     let state = api.state(game)
     expect(state).toEqual(GameState.NoMoreMoves)
+  })
+  test('full game', ()=>{
+    let game = api.create(customDeck);
+    let actions = gameActions as Actions[];
+    let nextAction:Actions = actions.shift() as Actions
+    while(actions.length > 0){
+      let result = api.action(game,nextAction)
+      nextAction = actions.shift() as Actions
+      game = result.game
+      expect(api.state(game)).toEqual(GameState.InProgress)
+    } 
+    expect(api.state(game)).toEqual(GameState.InProgress)
   })
 });

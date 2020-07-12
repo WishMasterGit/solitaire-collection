@@ -8,6 +8,7 @@ import {
   Locations,
   Games,
   Pile,
+  Rule,
 } from '../solitaireTypes';
 import _ from 'lodash';
 import { moveCards } from '../card';
@@ -36,7 +37,11 @@ export const createGame = (deck: Deck): Game => {
       [LocationType.Waste]: [{ cards: [], location: Locations.Waste0 }],
       [LocationType.Deck]: [],
     },
-    rules: {
+  };
+  return game;
+};
+
+export const rules:Rule = {
       [LocationType.Stock]: (_game, _from, _to): boolean => false,
       [LocationType.Tableau]: (_game, from, to): boolean => {
         return match(
@@ -72,14 +77,11 @@ export const createGame = (deck: Deck): Game => {
         );
       },
       [LocationType.Deck]: (_game, _from, _to): boolean => false,
-    },
-  };
-  return game;
-};
-
+    }
+  
 const outsideOfTableau: CaseType = [
   (fromCard: Card, toPile: Pile) =>
-    fromCard.location.type !== LocationType.Tableau &&
+    fromCard.location.type !== LocationType.Tableau || 
     toPile.location.type !== LocationType.Tableau,
   false,
 ];
@@ -98,8 +100,8 @@ const pileWithCards: CaseType = [
 
 const notFromTableauToFoundation: CaseType = [
   (fromCard: Card, toPile: Pile, fromCardPile: Pile) =>
-    fromCard.location.type !== LocationType.Tableau &&
-    toPile.location.type !== LocationType.Foundation &&
+    (fromCard.location.type !== LocationType.Tableau || 
+    toPile.location.type !== LocationType.Foundation) &&
     fromCard !== _.last(fromCardPile.cards),
   false,
 ];
@@ -111,7 +113,7 @@ const emptyFoundation: CaseType = [
 const notEmptyFoundation: CaseType = [
   (fromCard: Card, toPile: Pile, lastCard: Card) =>
     toPile.cards.length !== 0 &&
-    (lastCard.rank - fromCard.rank === 1 || (lastCard.rank === Rank.K && fromCard.rank === Rank.A)),
+    (fromCard.rank - lastCard.rank === 1 || (lastCard.rank === Rank.K && fromCard.rank === Rank.A)),
   true,
 ];
 
@@ -129,7 +131,7 @@ export function anyMovesLeft(game: Game): [boolean, Card | undefined, Card | und
 
   for (let lastCard of lastCards) {
     if (
-      game.rules[LocationType.Foundation](
+      rules[LocationType.Foundation](
         game.board,
         lastCard,
         getPile(game.board, Locations.Foundation0)
@@ -138,7 +140,7 @@ export function anyMovesLeft(game: Game): [boolean, Card | undefined, Card | und
       return [true, undefined, lastCard];
     }
     for (let card of allCards) {
-      if (game.rules[LocationType.Tableau](game.board, card, lastCard)) {
+      if (rules[LocationType.Tableau](game.board, card, lastCard)) {
         return [true, card, lastCard];
       }
     }

@@ -25,14 +25,7 @@ export let create = (deck: Deck): Game => {
       [LocationType.Waste]: [{ cards: [], location: Locations.Waste0 }],
       [LocationType.Foundation]: [],
       [LocationType.Deck]: [],
-    },
-    rules: {
-      [LocationType.Stock]: (_from, _to): boolean => false,
-      [LocationType.Tableau]: (_from, _to): boolean => false,
-      [LocationType.Waste]: (_from, _to): boolean => false,
-      [LocationType.Foundation]: (_from, _to): boolean => false,
-      [LocationType.Deck]: (_from, _to): boolean => false,
-    },
+    }
   };
 
   return game;

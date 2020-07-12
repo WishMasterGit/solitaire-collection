@@ -26,10 +26,9 @@ export function setDefault(
   set.set('default', func);
   return set;
 }
-
 export const execute = _.curry(
   (set: Map<String, ActionFunction>, game: Game, actions: Actions): ActionResult => {
-    let action = set.get(actionsHash(actions));
+    const action = set.get(actionsHash(actions));
     // console.log(`action: ${JSON.stringify(actions)}`);
     if (action) {
       return action(game, actions);

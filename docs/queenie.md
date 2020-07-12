@@ -1,5 +1,7 @@
 # Queenie
 
+1 Deck.  Very Easy (98%).  Mostly Skill.
+
 ## Description
 
 Build stacks of cards in alternating colors as in Klondike, move arbitrary groups of cards as in Yukon, and deal waves of cards onto to the tableau, as in Spider.

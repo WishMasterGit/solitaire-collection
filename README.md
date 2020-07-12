@@ -33,6 +33,7 @@ By default, runs tests related to files changed since the last commit.
 ## Useful links
 
 [Solitaired](https://solitaired.com)
+[Politaire](https://politaire.com/)
 
 ## Tasks ToDo
 

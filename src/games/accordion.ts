@@ -1,4 +1,4 @@
-import { Card, LocationType, Game, Locations, Deck, Games, GameBoard } from '../solitaireTypes';
+import { Card, LocationType, Game, Locations, Deck, Games, GameBoard, Rule } from '../solitaireTypes';
 import produce from 'immer';
 import { moveCard } from '../card';
 import { getPile, updatePile, as, asCard, findInPile } from '../gameBoard';
@@ -14,23 +14,24 @@ export let create = (deck: Deck): Game => {
       [LocationType.Waste]: [{ cards: [], location: Locations.Waste0 }],
       [LocationType.Foundation]: [],
       [LocationType.Deck]: [],
-    },
-    rules: {
-      [LocationType.Stock]: (_from, _to): boolean => false,
-      [LocationType.Tableau]: (gameBoard, from, to): boolean => {
-        return [
-          as([asCard(from), asCard(to)], (fromCard: Card, toCard: Card): boolean => {
-            return canMoveCard(gameBoard, fromCard, toCard);
-          }),
-        ].reduce((a, b) => a || b);
-      },
-      [LocationType.Waste]: (_from, _to): boolean => false,
-      [LocationType.Foundation]: (_from, _to): boolean => false,
-      [LocationType.Deck]: (_from, _to): boolean => false,
-    },
+    }
   };
   return game;
 };
+
+export const rules: Rule = {
+  [LocationType.Stock]: (_from, _to): boolean => false,
+  [LocationType.Tableau]: (gameBoard, from, to): boolean => {
+    return [
+      as([asCard(from), asCard(to)], (fromCard: Card, toCard: Card): boolean => {
+        return canMoveCard(gameBoard, fromCard, toCard);
+      }),
+    ].reduce((a, b) => a || b);
+  },
+  [LocationType.Waste]: (_from, _to): boolean => false,
+  [LocationType.Foundation]: (_from, _to): boolean => false,
+  [LocationType.Deck]: (_from, _to): boolean => false,
+}
 
 export function selectCard(game: Game, index: number): [number, Card] {
   const tableau = getPile(game.board, Locations.Tableau0);

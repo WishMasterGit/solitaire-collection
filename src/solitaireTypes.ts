@@ -47,15 +47,15 @@ export const Locations = {
   },
   Foundation1: {
     type: LocationType.Foundation,
-    index: 0,
+    index: 1,
   },
   Foundation2: {
     type: LocationType.Foundation,
-    index: 0,
+    index: 2,
   },
   Foundation3: {
     type: LocationType.Foundation,
-    index: 0,
+    index: 3,
   },
   Tableau0: {
     type: LocationType.Tableau,
@@ -122,7 +122,6 @@ export type Game = {
     type: Games;
   };
   board: GameBoard;
-  rules: Rule;
 };
 
 export enum ActionType {
@@ -144,7 +143,7 @@ export type ActionFunction = (game: Game, actions: Actions) => ActionResult;
 export type ActionResult = {
   game: Game;
   actions: Actions;
-  log: [];
+  log: String[];
 };
 
 export type Undo = Readonly<{
@@ -173,7 +172,7 @@ export type DeckGenerator = Map<String, (value: string) => Game>;
 export enum Games {
   Accordion = 'Accordion',
   AceOfHearts = 'AceOfHearts',
-
   Queenie = 'Queenie',
+  Yukon = 'Yukon',
   BuildDeck = 'BuildDeck',
 }
