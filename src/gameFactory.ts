@@ -8,8 +8,8 @@ import {
 } from './solitaireTypes';
 import { api as accordion } from './games/accordionAPI';
 import { api as aceOfHearts } from './games/aceOfHeartsAPI';
-import { api as queenie} from './games/queenieAPI';
-import { api as yukon} from './games/yukonAPI';
+import { api as queenie } from './games/queenieAPI';
+import { api as yukon } from './games/yukonAPI';
 import { api as buildDeck } from './games/buildDeckAPI';
 
 export interface GameAPI {

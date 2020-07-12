@@ -1,4 +1,20 @@
-import { Game, Card, Location, Rule, Actions, ActionResult, LocationType, ActionFunction, ActionType, DeckGenerator, DeckGenerators, Deck, GameState, Pile, Face } from "../solitaireTypes";
+import {
+  Game,
+  Card,
+  Location,
+  Rule,
+  Actions,
+  ActionResult,
+  LocationType,
+  ActionFunction,
+  ActionType,
+  DeckGenerator,
+  DeckGenerators,
+  Deck,
+  GameState,
+  Pile,
+  Face,
+} from '../solitaireTypes';
 import { getPile, moveSubPile, asCard, moveLastCard } from '../gameBoard';
 import { deal } from '../stock';
 import { setDefault, actionsTypeHash } from '../action';
@@ -9,18 +25,18 @@ export function moveCards(game: Game, fromCard: Card, toLocation: Location, rule
   const toPile = getPile(game.board, toLocation);
   if (rules[toPile.location.type](game.board, fromCard, toPile)) {
     game = moveSubPile(game, fromCard, toPile);
-    game = turnLastCard(game, getPile(game.board,fromCard.location))
+    game = turnLastCard(game, getPile(game.board, fromCard.location));
   }
   return game;
 }
 
 export function turnLastCard(game: Game, pile: Pile) {
-  if (pile.cards.length <= 0) return game
-  const lastCard = _.last(pile.cards) as Card
+  if (pile.cards.length <= 0) return game;
+  const lastCard = _.last(pile.cards) as Card;
   if (lastCard.face === Face.Down) {
-    game = moveLastCard(game,pile.location,pile.location,Face.Up)
+    game = moveLastCard(game, pile.location, pile.location, Face.Up);
   }
-  return game
+  return game;
 }
 
 export const singleClickAction = (game: Game, actions: Actions): ActionResult => {
@@ -37,7 +53,6 @@ export const singleClickAction = (game: Game, actions: Actions): ActionResult =>
 };
 
 export function getActionSet(rules: Rule) {
-
   let actionSet = new Map<String, ActionFunction>();
   setDefault(actionSet, (game, _actions) => {
     return { game, actions: [], log: [] };
@@ -68,7 +83,7 @@ export function getActionSet(rules: Rule) {
       return { game, actions: [], log: [] };
     }
   );
-  return actionSet
+  return actionSet;
 }
 
 export function getDeckGenerator(createGame: (deck: Deck) => Game) {
@@ -80,11 +95,12 @@ export function getDeckGenerator(createGame: (deck: Deck) => Game) {
   deckGenerator.set(DeckGenerators.PreBuilt, value => {
     return createGame(deckFromString(value));
   });
-  return deckGenerator
+  return deckGenerator;
 }
 
-
-export const getGameState = (anyMovesLeft: (game: Game) => [boolean, Card | undefined, Card | undefined]) => {
+export const getGameState = (
+  anyMovesLeft: (game: Game) => [boolean, Card | undefined, Card | undefined]
+) => {
   return (game: Game) => {
     const [movesLeft] = anyMovesLeft(game);
     const [foundation] = game.board.foundation;
@@ -96,5 +112,5 @@ export const getGameState = (anyMovesLeft: (game: Game) => [boolean, Card | unde
     } else {
       return GameState.NoMoreMoves;
     }
-  }
-}
+  };
+};

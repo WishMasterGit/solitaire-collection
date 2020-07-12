@@ -25,7 +25,7 @@ export let create = (deck: Deck): Game => {
       [LocationType.Waste]: [{ cards: [], location: Locations.Waste0 }],
       [LocationType.Foundation]: [],
       [LocationType.Deck]: [],
-    }
+    },
   };
 
   return game;

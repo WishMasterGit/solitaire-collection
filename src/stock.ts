@@ -29,7 +29,12 @@ const tableauYukonLike = (game: Game): Game => {
       default:
         for (let j = 1; j <= tableau.location.index + 5; j++) {
           if (canGetCradFrom(game, Locations.Stock)) {
-            game = moveLastCard(game, Locations.Stock, tableau.location, j <= tableau.location.index ? Face.Down : Face.Up);
+            game = moveLastCard(
+              game,
+              Locations.Stock,
+              tableau.location,
+              j <= tableau.location.index ? Face.Down : Face.Up
+            );
           }
         }
     }

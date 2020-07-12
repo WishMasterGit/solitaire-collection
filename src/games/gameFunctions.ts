@@ -1,5 +1,3 @@
-import { Game, Card, LocationType } from '../solitaireTypes';
-import { getPile } from '../gameBoard';
 import _ from 'lodash';
 
 // export function anyMovesLeft(game: Game): [boolean, Card | undefined, Card | undefined] {

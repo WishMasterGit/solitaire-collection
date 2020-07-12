@@ -1,4 +1,15 @@
-import { Game, LocationType, Deck, Locations, Games, Card, Rule, Pile, Rank, SuitColors } from '../solitaireTypes';
+import {
+  Game,
+  LocationType,
+  Deck,
+  Locations,
+  Games,
+  Card,
+  Rule,
+  Pile,
+  Rank,
+  SuitColors,
+} from '../solitaireTypes';
 import { moveCards } from '../card';
 import { CaseType, match, check, is } from '../funcUtils';
 import _ from 'lodash';
@@ -33,7 +44,7 @@ export const createGame = (deck: Deck): Game => {
       ],
       [LocationType.Waste]: [{ cards: [], location: Locations.Waste0 }],
       [LocationType.Deck]: [],
-    }
+    },
   };
   return game;
 };
@@ -54,12 +65,7 @@ export const rules: Rule = {
   [LocationType.Foundation]: (game, from, to): boolean => {
     return match(
       as([asCard(from), asPile(to)], (fromCard: Card, toPile: Pile): boolean => {
-        return check(
-          notFromTableauToFoundation,
-          fromCard,
-          toPile,
-          getPile(game, fromCard.location)
-        )
+        return check(notFromTableauToFoundation, fromCard, toPile, getPile(game, fromCard.location))
           .chainLeft(is(emptyFoundation, fromCard, toPile))
           .chainLeft(is(notEmptyFoundation, fromCard, toPile, _(toPile.cards).last() as Card))
           .orDefault(false);
@@ -67,11 +73,11 @@ export const rules: Rule = {
     );
   },
   [LocationType.Deck]: (_game, _from, _to): boolean => false,
-}
+};
 
 const outsideOfTableau: CaseType = [
   (fromCard: Card, toPile: Pile) =>
-    fromCard.location.type !== LocationType.Tableau || 
+    fromCard.location.type !== LocationType.Tableau ||
     toPile.location.type !== LocationType.Tableau,
   false,
 ];
@@ -102,37 +108,31 @@ const pileWithCards: CaseType = [
   true,
 ];
 
-
 //Foundation
 const notFromTableauToFoundation: CaseType = [
   (fromCard: Card, toPile: Pile, fromCardPile: Pile) =>
-    (fromCard.location.type !== LocationType.Tableau || 
-    toPile.location.type !== LocationType.Foundation) &&
+    (fromCard.location.type !== LocationType.Tableau ||
+      toPile.location.type !== LocationType.Foundation) &&
     fromCard !== _.last(fromCardPile.cards),
   false,
 ];
 
 // Any ace may be moved to any empty pile in the foundation.
 const emptyFoundation: CaseType = [
-  (fromCard: Card, toPile: Pile) =>
-    toPile.cards.length === 0
-    && fromCard.rank === Rank.A,
+  (fromCard: Card, toPile: Pile) => toPile.cards.length === 0 && fromCard.rank === Rank.A,
   true,
 ];
 
-
-// A card may be added onto a foundation pile if it is one higher 
+// A card may be added onto a foundation pile if it is one higher
 // than the old top card of the pile and of the same suit.
 // Thus, the only card that could be played on a 7♣ would be an 8♣.
 const notEmptyFoundation: CaseType = [
   (fromCard: Card, toPile: Pile, lastCard: Card) =>
-    toPile.cards.length !== 0
-    && fromCard.rank - lastCard.rank === 1
-    && lastCard.suit === fromCard.suit,
+    toPile.cards.length !== 0 &&
+    fromCard.rank - lastCard.rank === 1 &&
+    lastCard.suit === fromCard.suit,
   true,
 ];
-
-
 
 export function anyMovesLeft(game: Game): [boolean, Card | undefined, Card | undefined] {
   const lastCards = game.board.tableau

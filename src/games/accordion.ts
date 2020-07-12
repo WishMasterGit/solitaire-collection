@@ -1,4 +1,13 @@
-import { Card, LocationType, Game, Locations, Deck, Games, GameBoard, Rule } from '../solitaireTypes';
+import {
+  Card,
+  LocationType,
+  Game,
+  Locations,
+  Deck,
+  Games,
+  GameBoard,
+  Rule,
+} from '../solitaireTypes';
 import produce from 'immer';
 import { moveCard } from '../card';
 import { getPile, updatePile, as, asCard, findInPile } from '../gameBoard';
@@ -14,7 +23,7 @@ export let create = (deck: Deck): Game => {
       [LocationType.Waste]: [{ cards: [], location: Locations.Waste0 }],
       [LocationType.Foundation]: [],
       [LocationType.Deck]: [],
-    }
+    },
   };
   return game;
 };
@@ -31,7 +40,7 @@ export const rules: Rule = {
   [LocationType.Waste]: (_from, _to): boolean => false,
   [LocationType.Foundation]: (_from, _to): boolean => false,
   [LocationType.Deck]: (_from, _to): boolean => false,
-}
+};
 
 export function selectCard(game: Game, index: number): [number, Card] {
   const tableau = getPile(game.board, Locations.Tableau0);

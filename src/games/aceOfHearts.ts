@@ -41,47 +41,47 @@ export const createGame = (deck: Deck): Game => {
   return game;
 };
 
-export const rules:Rule = {
-      [LocationType.Stock]: (_game, _from, _to): boolean => false,
-      [LocationType.Tableau]: (_game, from, to): boolean => {
-        return match(
-          as([asCard(from), asCard(to)], (fromCard: Card, toCard: Card): boolean => {
-            return (
-              fromCard.location !== toCard.location &&
-              toCard.rank - fromCard.rank === 1 &&
-              toCard.suit === fromCard.suit
-            );
-          }),
-          as([asCard(from), asPile(to)], (fromCard: Card, toPile: Pile) => {
-            return check(outsideOfTableau, fromCard, toPile)
-              .chainLeft(is(emptyPileOrKing, fromCard, toPile))
-              .chainLeft(is(pileWithCards, _(toPile.cards).last() as Card, fromCard, toPile))
-              .orDefault(false);
-          })
+export const rules: Rule = {
+  [LocationType.Stock]: (_game, _from, _to): boolean => false,
+  [LocationType.Tableau]: (_game, from, to): boolean => {
+    return match(
+      as([asCard(from), asCard(to)], (fromCard: Card, toCard: Card): boolean => {
+        return (
+          fromCard.location !== toCard.location &&
+          toCard.rank - fromCard.rank === 1 &&
+          toCard.suit === fromCard.suit
         );
-      },
-      [LocationType.Waste]: (_game, _from, _to): boolean => false,
-      [LocationType.Foundation]: (gameBoard, from, to): boolean => {
-        return match(
-          as([asCard(from), asPile(to)], (fromCard: Card, toPile: Pile): boolean => {
-            return check(
-              notFromTableauToFoundation,
-              fromCard,
-              toPile,
-              getPile(gameBoard, fromCard.location)
-            )
-              .chainLeft(is(emptyFoundation, fromCard, toPile))
-              .chainLeft(is(notEmptyFoundation, fromCard, toPile, _(toPile.cards).last() as Card))
-              .orDefault(false);
-          })
-        );
-      },
-      [LocationType.Deck]: (_game, _from, _to): boolean => false,
-    }
-  
+      }),
+      as([asCard(from), asPile(to)], (fromCard: Card, toPile: Pile) => {
+        return check(outsideOfTableau, fromCard, toPile)
+          .chainLeft(is(emptyPileOrKing, fromCard, toPile))
+          .chainLeft(is(pileWithCards, _(toPile.cards).last() as Card, fromCard, toPile))
+          .orDefault(false);
+      })
+    );
+  },
+  [LocationType.Waste]: (_game, _from, _to): boolean => false,
+  [LocationType.Foundation]: (gameBoard, from, to): boolean => {
+    return match(
+      as([asCard(from), asPile(to)], (fromCard: Card, toPile: Pile): boolean => {
+        return check(
+          notFromTableauToFoundation,
+          fromCard,
+          toPile,
+          getPile(gameBoard, fromCard.location)
+        )
+          .chainLeft(is(emptyFoundation, fromCard, toPile))
+          .chainLeft(is(notEmptyFoundation, fromCard, toPile, _(toPile.cards).last() as Card))
+          .orDefault(false);
+      })
+    );
+  },
+  [LocationType.Deck]: (_game, _from, _to): boolean => false,
+};
+
 const outsideOfTableau: CaseType = [
   (fromCard: Card, toPile: Pile) =>
-    fromCard.location.type !== LocationType.Tableau || 
+    fromCard.location.type !== LocationType.Tableau ||
     toPile.location.type !== LocationType.Tableau,
   false,
 ];
@@ -100,8 +100,8 @@ const pileWithCards: CaseType = [
 
 const notFromTableauToFoundation: CaseType = [
   (fromCard: Card, toPile: Pile, fromCardPile: Pile) =>
-    (fromCard.location.type !== LocationType.Tableau || 
-    toPile.location.type !== LocationType.Foundation) &&
+    (fromCard.location.type !== LocationType.Tableau ||
+      toPile.location.type !== LocationType.Foundation) &&
     fromCard !== _.last(fromCardPile.cards),
   false,
 ];
