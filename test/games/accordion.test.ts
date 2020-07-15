@@ -35,7 +35,7 @@ describe('accordion', () => {
     const game: Game = defaultGame('seed');
     const [anyMoves, from, to] = anyMovesLeft(game)
     expect(anyMoves).toBeTruthy();
-    expect(from).toEqual(3);
+    expect(from).toEqual(1);
     expect(to).toEqual(0);
   });
   test('autoplay till game end', () => {
@@ -69,12 +69,11 @@ describe('accordion', () => {
   test('full game', ()=>{
     let game = api.create(customDeck);
     let actions = gameActions as Actions[];
-    let nextAction:Actions = actions.shift() as Actions
     while(actions.length > 0){
+      expect(api.state(game)).toEqual(GameState.InProgress)
+      let nextAction = actions.shift() as Actions
       let result = api.action(game,nextAction)
-      nextAction = actions.shift() as Actions
       game = result.game
-      // expect(api.state(game)).toEqual(GameState.InProgress)
     } 
     expect(api.state(game)).toEqual(GameState.GameOver)
   })

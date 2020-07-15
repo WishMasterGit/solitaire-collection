@@ -9,7 +9,7 @@ import {
   GameState,
   Locations,
 } from '../solitaireTypes';
-import { create, moveCardTo, rules } from './accordion';
+import { create, moveCardTo, rules, anyMovesLeft } from './accordion';
 import { shuffleDeck, DefaultDeck, deckFromString } from '../deck';
 import { setDefault, actionsTypeHash, execute } from '../action';
 import { getPile } from '../gameBoard';
@@ -42,14 +42,14 @@ actionSet.set(
 );
 
 export function getGameState(game: Game): GameState {
-  // const [anyMoves] = anyMovesLeft(game);
+  const [anyMoves] = anyMovesLeft(game);
   const waste = getPile(game.board, Locations.Waste0);
   if (waste.cards.length === 51) {
     return GameState.GameOver;
   }
-  // if (!anyMoves) {
-  //   return GameState.NoMoreMoves;
-  // }
+  if (!anyMoves) {
+    return GameState.NoMoreMoves;
+  }
   return GameState.InProgress;
 }
 

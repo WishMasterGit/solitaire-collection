@@ -118,6 +118,9 @@ const notEmptyFoundation: CaseType = [
 ];
 
 export function anyMovesLeft(game: Game): [boolean, Card | undefined, Card | undefined] {
+  if(getPile(game.board,Locations.Stock).cards.length > 0){
+    return [true,undefined,undefined]
+  }
   const lastCards = game.board.tableau
     .map(t => _.last(t.cards))
     .reduce((a, c) => {
@@ -128,6 +131,7 @@ export function anyMovesLeft(game: Game): [boolean, Card | undefined, Card | und
     }, new Array<Card>());
 
   const allCards = game.board.tableau.flatMap(t => t.cards);
+  const emptyTablues = _.filter(game.board.tableau, t=>t.cards.length === 0).length > 0
 
   for (let lastCard of lastCards) {
     if (
@@ -140,6 +144,9 @@ export function anyMovesLeft(game: Game): [boolean, Card | undefined, Card | und
       return [true, undefined, lastCard];
     }
     for (let card of allCards) {
+      if(card.rank === Rank.K && emptyTablues){
+        return [true, undefined, undefined];
+      }
       if (rules[LocationType.Tableau](game.board, card, lastCard)) {
         return [true, card, lastCard];
       }

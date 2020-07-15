@@ -82,10 +82,15 @@ export function moveCardTo(game: Game, fromCard: Card, toCard: Card): Game {
 
 export function anyMovesLeft(game: Game): [boolean, number, number] {
   let tableau = getPile(game.board, Locations.Tableau0).cards;
-  for (let i = 3; i < tableau.length; i++) {
-    const canMove = canMoveCard(game.board, tableau[i], tableau[i - 3]);
+  for (let i = 1; i < tableau.length; i++) {
+    let cardTo = i - 1
+    let canMove = canMoveCard(game.board, tableau[i], tableau[i - 1]);
+    if (i >= 3) { 
+      canMove = canMove || canMoveCard(game.board, tableau[i], tableau[i - 3]) 
+      cardTo = canMove?i-3:cardTo
+    }
     if (canMove) {
-      return [true, i, i - 3];
+      return [true, i, cardTo];
     }
   }
   return [false, -1, -1];

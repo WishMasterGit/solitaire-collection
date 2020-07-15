@@ -110,13 +110,12 @@ describe('aceOfHeartsTest', () => {
   test('full game', ()=>{
     let game = api.create(customDeck);
     let actions = gameActions as Actions[];
-    let nextAction:Actions = actions.shift() as Actions
     while(actions.length > 0){
-      let result = api.action(game,nextAction)
-      nextAction = actions.shift() as Actions
-      game = result.game
       expect(api.state(game)).toEqual(GameState.InProgress)
+      let nextAction = actions.shift() as Actions
+      let result = api.action(game,nextAction)
+      game = result.game
     } 
-    expect(api.state(game)).toEqual(GameState.InProgress)
+    expect(api.state(game)).toEqual(GameState.GameOver)
   })
 });
