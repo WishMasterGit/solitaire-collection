@@ -7,6 +7,7 @@ import {
   Games,
   GameBoard,
   Rule,
+  BoardType,
 } from '../solitaireTypes';
 import produce from 'immer';
 import { moveCard } from '../card';
@@ -16,6 +17,7 @@ export let create = (deck: Deck): Game => {
   let game: Game = {
     meta: {
       type: Games.Accordion,
+      boardType: BoardType.Accordion
     },
     board: {
       [LocationType.Stock]: [{ cards: deck.cards, location: Locations.Stock }],
@@ -83,11 +85,11 @@ export function moveCardTo(game: Game, fromCard: Card, toCard: Card): Game {
 export function anyMovesLeft(game: Game): [boolean, number, number] {
   let tableau = getPile(game.board, Locations.Tableau0).cards;
   for (let i = 1; i < tableau.length; i++) {
-    let cardTo = i - 1
+    let cardTo = i - 1;
     let canMove = canMoveCard(game.board, tableau[i], tableau[i - 1]);
-    if (i >= 3) { 
-      canMove = canMove || canMoveCard(game.board, tableau[i], tableau[i - 3]) 
-      cardTo = canMove?i-3:cardTo
+    if (i >= 3) {
+      canMove = canMove || canMoveCard(game.board, tableau[i], tableau[i - 3]);
+      cardTo = canMove ? i - 3 : cardTo;
     }
     if (canMove) {
       return [true, i, cardTo];

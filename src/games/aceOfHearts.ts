@@ -9,6 +9,7 @@ import {
   Games,
   Pile,
   Rule,
+  BoardType,
 } from '../solitaireTypes';
 import _ from 'lodash';
 import { moveCards } from '../card';
@@ -16,7 +17,10 @@ import { getPile, as, asCard, asPile } from '../gameBoard';
 import { check, is, CaseType, match } from '../funcUtils';
 export const createGame = (deck: Deck): Game => {
   let game: Game = {
-    meta: { type: Games.AceOfHearts },
+    meta: { 
+      type: Games.AceOfHearts,
+      boardType:BoardType.Klondike
+    },
     board: {
       [LocationType.Stock]: [
         {
@@ -118,8 +122,8 @@ const notEmptyFoundation: CaseType = [
 ];
 
 export function anyMovesLeft(game: Game): [boolean, Card | undefined, Card | undefined] {
-  if(getPile(game.board,Locations.Stock).cards.length > 0){
-    return [true,undefined,undefined]
+  if (getPile(game.board, Locations.Stock).cards.length > 0) {
+    return [true, undefined, undefined];
   }
   const lastCards = game.board.tableau
     .map(t => _.last(t.cards))
@@ -131,7 +135,7 @@ export function anyMovesLeft(game: Game): [boolean, Card | undefined, Card | und
     }, new Array<Card>());
 
   const allCards = game.board.tableau.flatMap(t => t.cards);
-  const emptyTablues = _.filter(game.board.tableau, t=>t.cards.length === 0).length > 0
+  const emptyTablues = _.filter(game.board.tableau, t => t.cards.length === 0).length > 0;
 
   for (let lastCard of lastCards) {
     if (
@@ -144,7 +148,7 @@ export function anyMovesLeft(game: Game): [boolean, Card | undefined, Card | und
       return [true, undefined, lastCard];
     }
     for (let card of allCards) {
-      if(card.rank === Rank.K && emptyTablues){
+      if (card.rank === Rank.K && emptyTablues) {
         return [true, undefined, undefined];
       }
       if (rules[LocationType.Tableau](game.board, card, lastCard)) {

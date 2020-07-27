@@ -9,6 +9,7 @@ import {
   Pile,
   Rank,
   SuitColors,
+  BoardType,
 } from '../solitaireTypes';
 import { moveCards } from '../card';
 import { CaseType, match, check, is } from '../funcUtils';
@@ -19,6 +20,7 @@ export const createGame = (deck: Deck): Game => {
   let game: Game = {
     meta: {
       type: Games.Queenie,
+      boardType:BoardType.Klondike
     },
     board: {
       [LocationType.Stock]: [

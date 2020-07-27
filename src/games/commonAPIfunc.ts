@@ -30,6 +30,20 @@ export function moveCards(game: Game, fromCard: Card, toLocation: Location, rule
   return game;
 }
 
+export function autoMoveToFoundation(game: Game, fromCard: Card, rules: Rule) {
+  const foundations = game.board.foundation
+  for (let f of foundations){
+    const toLocation = f.location
+    const toPile = getPile(game.board, toLocation);
+    if (rules[toPile.location.type](game.board, fromCard, toPile)) {
+      game = moveSubPile(game, fromCard, toPile);
+      game = turnLastCard(game, getPile(game.board, fromCard.location));
+      return game;
+    }
+  }
+  return game;
+}
+
 export function turnLastCard(game: Game, pile: Pile) {
   if (pile.cards.length <= 0) return game;
   const lastCard = _.last(pile.cards) as Card;
@@ -70,6 +84,14 @@ export function getActionSet(rules: Rule) {
     actionsTypeHash([ActionType.Card, ActionType.Card]),
     (game: Game, actions: Actions) => {
       const [fromCard, toCard] = actions.map(a => a.value) as [Card, Card];
+      game = moveCards(game, fromCard, toCard.location, rules);
+      return { game, actions: [], log: [] };
+    }
+  );
+  actionSet.set(
+    actionsTypeHash([ActionType.Card, ActionType.DoubleClick]),
+    (game: Game, actions: Actions) => {
+      const [fromCard] = actions.map(a => a.value) as [Card];
       game = moveCards(game, fromCard, toCard.location, rules);
       return { game, actions: [], log: [] };
     }

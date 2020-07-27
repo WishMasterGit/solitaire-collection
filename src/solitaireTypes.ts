@@ -120,6 +120,7 @@ export type Rule = Record<
 export type Game = {
   meta: {
     type: Games;
+    boardType: BoardType
   };
   board: GameBoard;
 };
@@ -127,7 +128,7 @@ export type Game = {
 export enum ActionType {
   Card = 'Card',
   Location = 'Location',
-
+  DoubleClick = 'DoubleClick',
   Pile = 'Pile',
   Noop = 'Noop',
 }
@@ -175,4 +176,9 @@ export enum Games {
   Queenie = 'Queenie',
   Yukon = 'Yukon',
   BuildDeck = 'BuildDeck',
+}
+
+export enum BoardType {
+  Klondike = 'Klondike',
+  Accordion = 'Accordion'
 }
