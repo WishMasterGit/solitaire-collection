@@ -17,7 +17,7 @@ export let create = (deck: Deck): Game => {
   let game: Game = {
     meta: {
       type: Games.Accordion,
-      boardType: BoardType.Accordion
+      boardType: BoardType.Accordion,
     },
     board: {
       [LocationType.Stock]: [{ cards: deck.cards, location: Locations.Stock }],

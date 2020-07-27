@@ -17,9 +17,9 @@ import { getPile, as, asCard, asPile } from '../gameBoard';
 import { check, is, CaseType, match } from '../funcUtils';
 export const createGame = (deck: Deck): Game => {
   let game: Game = {
-    meta: { 
+    meta: {
       type: Games.AceOfHearts,
-      boardType:BoardType.Klondike
+      boardType: BoardType.Klondike,
     },
     board: {
       [LocationType.Stock]: [

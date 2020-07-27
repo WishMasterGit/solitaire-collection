@@ -31,9 +31,9 @@ export function moveCards(game: Game, fromCard: Card, toLocation: Location, rule
 }
 
 export function autoMoveToFoundation(game: Game, fromCard: Card, rules: Rule) {
-  const foundations = game.board.foundation
-  for (let f of foundations){
-    const toLocation = f.location
+  const foundations = game.board.foundation;
+  for (let f of foundations) {
+    const toLocation = f.location;
     const toPile = getPile(game.board, toLocation);
     if (rules[toPile.location.type](game.board, fromCard, toPile)) {
       game = moveSubPile(game, fromCard, toPile);

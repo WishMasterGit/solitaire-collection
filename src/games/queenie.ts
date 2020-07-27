@@ -20,7 +20,7 @@ export const createGame = (deck: Deck): Game => {
   let game: Game = {
     meta: {
       type: Games.Queenie,
-      boardType:BoardType.Klondike
+      boardType: BoardType.Klondike,
     },
     board: {
       [LocationType.Stock]: [

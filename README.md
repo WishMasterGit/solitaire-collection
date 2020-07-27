@@ -35,8 +35,15 @@ By default, runs tests related to files changed since the last commit.
 [Solitaired](https://solitaired.com)
 [Politaire](https://politaire.com/)
 
+## Local link
+
+This package is under development so it should be linked to you project
+
+[Local link](https://classic.yarnpkg.com/en/docs/cli/link/)
+
 ## Tasks ToDo
 
 - Get available (first available) moves (through actions API)
 - prepare the testable deck for the ace of hearts
 - find a better card (so it easy to see suit and rank)
+
