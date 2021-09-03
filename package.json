@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "@types/seedrandom": "^2.4.28",
-    "immer": "^6.0.5",
+    "immer": "^9.0.6",
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15",
     "purify-ts": "^0.15.1",
